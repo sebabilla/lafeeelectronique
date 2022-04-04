@@ -5,7 +5,6 @@
 
 //------------Initialisation et rechargement----------------------------
 void InitialisationPartie(Partie *p);
-void PartieReset(Partie *p);
 void Choixlangage(Partie *p, Clavier c);
 int ActionsLangage(Partie *partie);
 
@@ -24,6 +23,8 @@ void LibererJoueur(Joueur *j);
 Bouton ActionJoueur(Joueur *j);
 void BougerJoueur(Joueur *j, Clavier c);
 void ChangerTerrainActif(Joueur *j);
+int AnneeFinie(Joueur *j);
+void NouvelleAnnee(Joueur *j, Partie *p, Terrain *t);
 
 //------------Gestion Dechets-------------------------------------------
 int GenererDechets(Terrain *t);

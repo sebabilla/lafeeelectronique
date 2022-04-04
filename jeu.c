@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <SDL_mixer.h>
+#include <math.h>
 
 #include "types.h"
 #include "controle.h"
@@ -11,18 +12,11 @@ void InitialisationPartie(Partie *p)
 {
 	p->langage = -1;
 	p->programme_en_cours = 1;
-	p->pause = 0;
-	p->reset = 1;
-	p->resultat = -1;
-}
-
-void PartieReset(Partie *p)
-{
-	p->pause = 0;
-	p->reset = 0;
-	p->temps = 0;
-	p->resultat = -1;
-
+	p->fee_pose_dechets = 0;
+	p->introduction.stade = 0;
+	p->introduction.temps = 0;
+	p->introduction.inverser = 1;
+	p->etat = CHOIX_LANGUE;
 }
 
 void Choixlangage(Partie *p, Clavier c)
@@ -132,16 +126,21 @@ void InitialiserJoueur(Joueur *j, Terrain *t)
 	j->recyclage = PotentielRecyclage(t);
 	j->x = 0;
 	j->y = 0;
-	j->annee = 2022;
+	j->annee = 2021;
+	j->temps = 0;
 }
 
 int PotentielRecyclage(Terrain *t)
 {
 	int compteur = 0;
-	for (int i = 0; i < LARGEUR_TERRAIN; i ++)
+	for (int i = 1; i <= LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
-			compteur += t->matrice[i][j];
-	return t->pays->ratio_lineaire * compteur / 100;
+			compteur += t->matrice[i][j];;
+	float potentiel = (float)t->pays->ratio_lineaire * compteur / 100;
+	if (potentiel < 1 && rand() % 3 == 0)
+		potentiel = ceil(potentiel);
+	
+	return potentiel;
 }
 
 void LibererJoueur(Joueur *j)
@@ -170,7 +169,6 @@ Bouton ActionJoueur(Joueur *j)
 	
 	BougerJoueur(j, clavier);
 		
-	
 	return SANS;
 }
 
@@ -220,6 +218,25 @@ void ChangerTerrainActif(Joueur *j)
 	j->terrain_actif = j->terrain_actif->suivant;
 	j->recyclage = PotentielRecyclage(j->terrain_actif);
 }
+
+int AnneeFinie(Joueur *j)
+{
+	if (j->terrain_actif->suivant == NULL &&
+		j->x >= LARGEUR_TERRAIN + 1)
+		return 1;
+	return 0;
+}
+
+void NouvelleAnnee(Joueur *j, Partie *p, Terrain *t)
+{
+	p->etat = NOUVELLE_ANNEE;
+	j->terrain_actif = t;
+	j->x = 0;
+	j->y = 0;
+	j->annee++;
+	j->recyclage = PotentielRecyclage(j->terrain_actif);
+}
+
 
 //------------Gestion Dechets-------------------------------------------
 

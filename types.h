@@ -19,20 +19,31 @@ typedef enum Bouton
 	ENTREE, ESPACE, ECHAP, FERMERFENETRE, SANS
 } Bouton;
 
+typedef enum Etat
+{
+	CHOIX_LANGUE, INTRODUCTION, MENU_PRINCIPAL, NOUVELLE_PARTIE, NOUVELLE_ANNEE, EN_COURS, TRANSITION_FEE, TRANSITION_GNOME, PAUSE, CREDITS, QUITTER
+} Etat;
+
 typedef struct Manette
 {
 	Direction direction;
 	Bouton bouton;
 } Manette;
 
+typedef struct Introduction
+{
+	int stade;
+	int temps;
+	int inverser;
+} Introduction;
+
 typedef struct Partie
 {
 	int langage;
 	int programme_en_cours;
-	int pause;
-	int reset;
-	int temps;
-	int resultat;
+	int fee_pose_dechets;
+	Introduction introduction;
+	Etat etat;
 } Partie;
 
 typedef struct Pays
@@ -40,6 +51,7 @@ typedef struct Pays
 	char nom[15];
 	int x;
 	int y;
+	int numero;
 	int dechets_electroniques;
 	int ratio_lineaire;
 } Pays;
@@ -60,6 +72,7 @@ typedef struct Joueur
 	int x;
 	int y;
 	int annee;
+	int temps;
 } Joueur;
 
 typedef struct Clavier
