@@ -1,0 +1,10 @@
+SouthAfrica 7 4
+Uganda 1 1
+Canada 20 13
+Chile 10 3
+China 7 15
+India 2 1
+Japan 20 22
+Bulgaria 12 66
+France 21 54
+Austalia 22 10

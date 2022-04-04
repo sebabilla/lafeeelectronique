@@ -1,0 +1,14 @@
+BRAVO
+Incorrecto
+Pausa
+Flechas: Controlar el viento
+Enter: Probar la posición / Bolas nuevas
+Espacio: Pausa / Continuar
+META:
+CRÉDITOS
+Proyecto final 'CS50x' por Sébastien Abilla
+Cursos y tutos: Malan D., Champagne J., Shiffman D., Sharp J., etc.
+Peer Gynt Suite nº 1, Op. 46 - III (Orquesta Sinfónica Nacional Checa, dominio público)
+Sonidos adaptados de LaSonothèque (Sardin J., libre de derechos)
+Increíble, ¡ has derrotado el juego !
+Cantidad de intentos:

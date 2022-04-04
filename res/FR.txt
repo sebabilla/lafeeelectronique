@@ -1,0 +1,14 @@
+BRAVO
+Incorrect
+Pause
+Fleches: Contrôler le vent
+Entree: Vérifier l'alignement / Recommencer
+Espace: Pause / Continuer
+BUT:
+CREDITS
+Projet final pour CS50x de Sébastien Abilla
+Cours et tutos: Malan D., Champagne J.,  Shiffman D., Sharp J., etc...
+Peer Gynt Suite No. 1, Op. 46 - III (Czech National Symphony Orchestra, domaine publique)
+Sons adaptés de LaSonothèque (Sardin J., Libre de droit)
+Incroyable, vous avez battu le jeu!
+Nombre d'essais:

@@ -1,0 +1,14 @@
+BRAVO
+Incorrect
+Pause
+Arrows: Control the wind
+Enter: Check alignment / New balls
+Space: Pause / Continue
+GOAL:
+CREDITS
+CS50x's Final project by Sébastien Abilla
+Courses and tutos: Malan D., Champagne J., Shiffman D., Sharp J., etc...
+Peer Gynt Suite No. 1, Op. 46 - III (Czech National Symphony Orchestra, public domain)
+Sounds adapted from LaSonotheque (Sardin J., copyright free)
+Unbelievable, you have defeated the game!
+Number of attempts:

@@ -1,0 +1,9 @@
+﻿La Fée Electronique est toute puissante. Presque tous les habitants du monde ont succombé à ses charmes. Sous l’emprise de la fée, ils consomment, encore et encore.
+
+Tu es un gnome anonyme, petit, mais brave. Ta mission est d’aider dix habitants de cette planète à se frayer un chemin au sein de leurs vies chaotiques de consommateurs. 
+
+La Fée Electronique va tout faire pour submerger ces habitants sous des montagnes d’appareils, gardés “au cas ou”, obsolètes, ou simplement oubliés dans un coin. Pour l’en empêcher, petit gnome, tu peux aider les humains:
+    • à ranger leur bazar en poussant les appareils (Entrée + Flèche), 
+    • à utiliser les options de recyclage présentes dans leur pays (Espace + Flèche).
+
+
