@@ -4,11 +4,20 @@
 #include "controle.h"
 #include "affichage.h"
 
-int AnimationIntroduction(Partie *partie)
+void AnimationIntroduction(Partie *partie)
 {
 	Clavier clavier = EntreeJoueur();
 	if (clavier.bouton == FERMERFENETRE)
+	{
 		partie->programme_en_cours = 0;
+		return ;
+	}
+		
+	if (clavier.bouton == ECHAP)
+	{
+		partie->introduction.stade = -1;
+		return;
+	}
 	
 	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
 		partie->introduction.stade++;
@@ -66,16 +75,21 @@ int AnimationIntroduction(Partie *partie)
 			}
 			break;
 		default:
-			partie->introduction.stade = 0;
 			partie->introduction.temps = 0;
-			return 1;
 			break;
 	}
-	return 0;
 }
 
 void AnimationFeeNouvelleAnnee1(Partie *partie, Joueur *joueur, Terrain *terrain)
 {
+	Clavier clavier = EntreeJoueur();
+	if (clavier.bouton == FERMERFENETRE)
+	{
+		partie->programme_en_cours = 0;
+		return;
+	}
+	
+	
 	AfficherInfosFee(joueur);
 	
 	AfficherLesTerrainsSansJoueur(terrain);

@@ -4,7 +4,8 @@
 #define PAYS_DEPART "France"
 
 //------------Initialisation et rechargement----------------------------
-void InitialisationPartie(Partie *p);
+Partie *InitialisationPartie(void);
+void LibererPartie(Partie *p);
 void Choixlangage(Partie *p, Clavier c);
 int ActionsLangage(Partie *partie);
 
@@ -20,7 +21,8 @@ Joueur *NouveauJoueur(void);
 void InitialiserJoueur(Joueur *j, Terrain *t);
 int PotentielRecyclage(Terrain *t);
 void LibererJoueur(Joueur *j);
-Bouton ActionJoueur(Joueur *j);
+void ActionJoueur(Joueur *j, Partie *p);
+void ActionPause(Joueur *j, Partie *p);
 void BougerJoueur(Joueur *j, Clavier c);
 void ChangerTerrainActif(Joueur *j);
 int AnneeFinie(Joueur *j);

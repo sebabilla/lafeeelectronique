@@ -18,7 +18,7 @@ Ta mission est d’aider dix habitants de
 cette planète à se frayer un chemin au sein
 de leurs vies chaotiques de consommateurs.
 La Fée Electronique va tout faire pour submerger
-ces habitants sous des montagnes d’appareils, 
+ces personnes sous des montagnes d’appareils, 
 gardés “au cas ou”, obsolètes, ou simplement 
 oubliés dans un coin.
 Pour l’en empêcher, petit gnome,
@@ -28,4 +28,5 @@ utiliser les options de
 recyclage présentes
 dans leur pays.
 Achète humain, achète!
-Recyclage des déchets électroniques en
+Recyclage des e-déchets en
+PAUSE

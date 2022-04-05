@@ -12,7 +12,6 @@ SDL_Renderer *renderer;
 int frame_limit;
 TTF_Font *font;
 SDL_Texture *texture_images[NOMBRE_IMAGES];
-SDL_Texture *textures_niveaux[5];
 SDL_Texture *textures_langages[NOMBRE_LANGAGES * 2];
 int longueur_langage[NOMBRE_LANGAGES * 2];
 SDL_Texture *texture_textes[LIGNES_TEXTE];
@@ -70,33 +69,21 @@ void InitialisationAffichage(void)
 	if((initialise&drapeau) != drapeau) 
 		SDL_ExitWithError("Initiation SDL_image");
 	
+	ChargerImages("res/petite_fee.png", 0);
+	ChargerImages("res/petit_gnome.png", 1);
+	ChargerImages("res/fee.png", 2);
+	ChargerImages("res/gnome.png", 3);
+}
+
+void ChargerImages(char *l, int i)
+{
 	SDL_Surface *image = NULL;
-	image = IMG_Load("res/petite_fee.png");
-	texture_images[0] = NULL;
+	image = IMG_Load(l);
+	texture_images[i] = NULL;
 	if(!image)
 		SDL_ExitWithError("Impossible de charger la petite fée");
-	if ((texture_images[0] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
+	if ((texture_images[i] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
 		SDL_ExitWithError("Impossible de charger la petite fée");
-	image = IMG_Load("res/petit_gnome.png");
-	texture_images[1] = NULL;
-	if(!image)
-		SDL_ExitWithError("Impossible de charger la petite gnomette");
-	if ((texture_images[1] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
-		SDL_ExitWithError("Impossible de charger la petite gnomette");
-	image = IMG_Load("res/fee.png");
-	texture_images[2] = NULL;
-	if(!image)
-		SDL_ExitWithError("Impossible de charger la petite fée");
-	if ((texture_images[2] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
-		SDL_ExitWithError("Impossible de charger la petite fée");
-	image = IMG_Load("res/gnome.png");
-	texture_images[3] = NULL;
-	if(!image)
-		SDL_ExitWithError("Impossible de charger la petite gnomette");
-	if ((texture_images[3] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
-		SDL_ExitWithError("Impossible de charger la petite gnomette");
-	
-	
 	SDL_FreeSurface(image);
 }
 
@@ -122,6 +109,10 @@ void DestructionAffichage(void)
 {
 	for (int i = 0; i < NOMBRE_IMAGES; i++)
 		SDL_DestroyTexture(texture_images[i]);
+	for (int i = 0; i < LIGNES_TEXTE; i++)
+		SDL_DestroyTexture(texture_textes[i]);
+	for (int i = 0; i < NOMBRE_LANGAGES * 2; i++)
+		SDL_DestroyTexture(textures_langages[i]);
 	IMG_Quit();
 	TTF_CloseFont(font);
 	TTF_Quit();
@@ -171,6 +162,45 @@ void AfficherTuile(int x, int y, int statut)
 		SDL_ExitWithError("Impossible de tracer les box");		
 }
 
+void AfficherMiniTuile(int x, int y, int statut)
+{
+	Uint32 couleur;
+	switch(statut)
+	{
+		case -1:
+			couleur = MARRON;
+			break;		
+		case 0:
+			couleur = VERT;
+			break;
+		case 1:
+			couleur = JAUNE;
+			break;
+		case 2:
+			couleur = ROUGE;
+			break;
+		case 3:
+			couleur = GRIS;
+			break;
+		case 4:
+			couleur = ROSE;
+			break;
+		case 10:
+			couleur = NOIR;
+			break;
+		case 99:
+			couleur = TURQUOISE;
+			break;	
+		default:
+			break;			
+	}
+	
+	if (boxColor(renderer, x, y, x + TUILE / 2, y + TUILE / 2, couleur) < 0)
+		SDL_ExitWithError("Impossible de tracer les box");
+	if (rectangleColor(renderer, x, y, x + TUILE / 2, y + TUILE / 2, 0xFF000000) < 0)
+		SDL_ExitWithError("Impossible de tracer les box");		
+}
+
 //------------Affichage des terrains------------------------------------
 
 void AfficherLesTerrainsAvecJoueur(const Terrain *t, const Joueur *j)
@@ -179,7 +209,10 @@ void AfficherLesTerrainsAvecJoueur(const Terrain *t, const Joueur *j)
 		AfficherLesTerrainsAvecJoueur(t->suivant, j);
 
 	if (t == j->terrain_actif)
+	{
 		IlluminerTerrain(t);
+		InfosTerrainActif(t, j);
+	}
 	
 	AfficherUnTerrain(t);
 	
@@ -201,7 +234,7 @@ void AfficherUnTerrain(const Terrain *t)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
 			AfficherTuile(t->pays->x + i * TUILE, t->pays->y + j * TUILE, t->matrice[i][j]);
 	
-	SDL_Rect message_rect = {.x = TUILE + t->pays->x, .y = 0 + t->pays->y + TUILE * HAUTEUR_TERRAIN, .w = longueur_texte[t->pays->numero] * 7, .h = TUILE};
+	SDL_Rect message_rect = {.x = TUILE + t->pays->x, .y = t->pays->y + TUILE * HAUTEUR_TERRAIN, .w = longueur_texte[t->pays->numero] * 7, .h = TUILE};
 	if (SDL_RenderCopy(renderer, texture_textes[t->pays->numero], NULL, &message_rect) < 0)
 		SDL_ExitWithError("Impossible d'écrire ligne e_waste");
 }
@@ -216,6 +249,25 @@ void IlluminerTerrain(const Terrain *t)
 {
 	if (boxColor(renderer, t->pays->x - TUILE, t->pays->y - TUILE, t->pays->x + (LARGEUR_TERRAIN + 3) * TUILE, t->pays->y + (HAUTEUR_TERRAIN + 1) * TUILE, 0x50C3E617) < 0)
 		SDL_ExitWithError("Impossible de tracer les box");
+}
+
+void InfosTerrainActif(const Terrain *t, const Joueur *j)
+{
+	char ratio[10];
+	int long_texte_pays = TUILE + t->pays->x + (longueur_texte[t->pays->numero] + 1) * 7;
+	int long_pourcentage = 7 * 6;
+	
+	sprintf(ratio, " (%d %%)", j->terrain_actif->pays->ratio_lineaire);
+	EcrireTexteProvisoire(ratio, 
+							long_texte_pays, 
+							t->pays->y + TUILE * HAUTEUR_TERRAIN, 
+							long_pourcentage, 
+							TUILE);
+	
+	for (int i = 0; i < j->recyclage; i ++)
+		AfficherMiniTuile(i * TUILE / 2 + TUILE / 2 + long_texte_pays + long_pourcentage, 
+						t->pays->y + TUILE * HAUTEUR_TERRAIN + TUILE /4,
+						4);
 }
 
 void ApparitionColonneDechets(const Terrain *t, const int i)
@@ -259,10 +311,7 @@ void ChargerTextes(int l)
 	if (l == 4)
 		lien = "res/JA.txt";
 	
-	TextesTraduits(lien);
-	
-	TextesNiveaux();
-	
+	TextesTraduits(lien);	
 }
 
 int VerificationLangage(const char *s)
@@ -319,16 +368,6 @@ void TextesTraduits(char *l)
 	}
 }
 
-void TextesNiveaux(void)
-{
-	char niveau[4];
-	for (int i = 0; i < 5; i++)
-	{
-		sprintf(niveau, "%d/6", i + 2);
-		textures_niveaux[i] = TextureTexte(niveau, 0);
-	}
-}
-
 void EcrireTexteProvisoire(char *texte, int X, int Y, int W, int H)
 {	
 	SDL_Texture *message = TextureTexte(texte, 0);	
@@ -345,21 +384,6 @@ void AfficherInfosJoueur(Joueur *j)
 	char annee[5];
 	sprintf(annee, "%d", j->annee);
 	EcrireTexteProvisoire(annee, TUILE, 0, 80, 50);
-	
-	SDL_Rect message_rect = {.x = 9 * TUILE, .y = 0, .w = longueur_texte[30] * 8, .h = 30};
-	if (SDL_RenderCopy(renderer, texture_textes[30], NULL, &message_rect) < 0)
-		SDL_ExitWithError("Impossible d'écrire ligne e_waste");
-	message_rect.x = 9 * TUILE + (longueur_texte[30] + 1) * 8;
-	message_rect.w = longueur_texte[j->terrain_actif->pays->numero] * 8;
-	if (SDL_RenderCopy(renderer, texture_textes[j->terrain_actif->pays->numero], NULL, &message_rect) < 0)
-		SDL_ExitWithError("Impossible d'écrire ligne e_waste");
-		
-	char ratio[10];
-	sprintf(ratio, " (%d %%)", j->terrain_actif->pays->ratio_lineaire);
-	EcrireTexteProvisoire(ratio, 9 * TUILE + (longueur_texte[30] + 1 + longueur_texte[j->terrain_actif->pays->numero]) * 8, 0, 8 * 6, 30);
-	
-	for (int i = 0; i < j->recyclage; i ++)
-		AfficherTuile(9 * TUILE + i * TUILE, 1.5 * TUILE , 4);
 		
 }
 
@@ -388,13 +412,7 @@ void AfficherIncorrect(void)
 void AfficherPause(void)
 {
 	SDL_Rect message_rect = {.x = LARGEUR_FENETRE / 2 - 50, .y = HAUTEUR_FENETRE / 2 - 50, .w = 150, .h = 100};
-	SDL_RenderCopy(renderer, texture_textes[2], NULL, &message_rect);
-	
-	for (int i = 0; i < 5; i++)
-	{
-		SDL_Rect message_rect = {.x = 5, .y = HAUTEUR_FENETRE - 110 + i * 20, .w = longueur_texte[7 + i] * 8, .h = 20};
-		SDL_RenderCopy(renderer, texture_textes[7 + i], NULL, &message_rect);
-	}
+	SDL_RenderCopy(renderer, texture_textes[31], NULL, &message_rect);
 }
 
 void TextureLangages(void)
@@ -464,11 +482,11 @@ void AfficherPetiteFee(int position_x)
 		SDL_ExitWithError("Impossible d'écrire injonction fée");
 }
 
-void AfficherPetiteGnomette(void)
+void AfficherPetiteGnomette(int position_x, int position_y)
 {
-	SDL_Rect rect_illu = {.w = 2*TUILE, .h = 3*TUILE};
-	rect_illu.x = 6 * TUILE; 
-	rect_illu.y = 0;
+	SDL_Rect rect_illu = {.w = 2*TUILE, .h = 2.5*TUILE};
+	rect_illu.x = 8 * TUILE + position_x; 
+	rect_illu.y = 0 + position_y;
 	if (SDL_RenderCopy(renderer, texture_images[1], NULL, &rect_illu) != 0)
 			SDL_ExitWithError("Impossible d'afficher la texture");
 }

@@ -8,15 +8,32 @@
 
 
 //------------Initialisation et rechargement----------------------------
-void InitialisationPartie(Partie *p)
+Partie *InitialisationPartie(void)
 {
+	Partie *p = malloc(sizeof(Partie));
+	if (p == NULL)
+	{
+		printf("Erreur d'allocation mémoire");
+		exit(EXIT_FAILURE);
+	}
+	
+	p->etat = CHOIX_LANGUE;
 	p->langage = -1;
 	p->programme_en_cours = 1;
 	p->fee_pose_dechets = 0;
+	p->en_cours = 1;
+	p->en_pause = 1;
 	p->introduction.stade = 0;
 	p->introduction.temps = 0;
 	p->introduction.inverser = 1;
-	p->etat = CHOIX_LANGUE;
+	
+	return p;
+}
+
+void LibererPartie(Partie *p)
+{
+	free(p);
+	p = NULL;
 }
 
 void Choixlangage(Partie *p, Clavier c)
@@ -149,15 +166,16 @@ void LibererJoueur(Joueur *j)
 	j = NULL;
 }
 
-Bouton ActionJoueur(Joueur *j)
+void ActionJoueur(Joueur *j, Partie *p)
 {
 	Clavier clavier = EntreeJoueur();
 	
 	if (clavier.bouton == FERMERFENETRE)
-		return FERMERFENETRE;
-	if (clavier.bouton == ECHAP)
-		return ECHAP;
+		p->programme_en_cours = 0;
 	
+	if (clavier.bouton == ECHAP)
+		p->en_cours = 0;
+		
 	if (clavier.bouton == ESPACE && 
 			clavier.direction != RIEN 
 			&& j->recyclage > 0)
@@ -168,8 +186,20 @@ Bouton ActionJoueur(Joueur *j)
 		PousserDechet(j, clavier.direction);
 	
 	BougerJoueur(j, clavier);
+}
+
+void ActionPause(Joueur *j, Partie *p)
+{
+	Clavier clavier = EntreeJoueur();
+	
+	if (clavier.bouton == FERMERFENETRE)
+		p->programme_en_cours = 0;
+	
+	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
+		p->en_pause = 0;
 		
-	return SANS;
+	if (clavier.bouton == ECHAP)
+		p->en_pause = -1;
 }
 
 void BougerJoueur(Joueur *j, Clavier c)
@@ -242,7 +272,7 @@ void NouvelleAnnee(Joueur *j, Partie *p, Terrain *t)
 
 int GenererDechets(Terrain *t)
 {
-	int terrain_actuel[LARGEUR_TERRAIN * HAUTEUR_TERRAIN];
+	int terrain_actuel[LARGEUR_TERRAIN * HAUTEUR_TERRAIN] = {0};
 		
 	for (int i = 1; i < LARGEUR_TERRAIN + 1; i ++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)

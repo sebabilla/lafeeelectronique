@@ -39,11 +39,13 @@ typedef struct Introduction
 
 typedef struct Partie
 {
+	Etat etat;
 	int langage;
 	int programme_en_cours;
 	int fee_pose_dechets;
+	int en_cours;
+	int en_pause;
 	Introduction introduction;
-	Etat etat;
 } Partie;
 
 typedef struct Pays
