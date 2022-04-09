@@ -18,38 +18,36 @@ void AnimationIntroduction(Partie *partie)
 		
 	if (clavier.bouton == ECHAP)
 	{
-		partie->introduction.stade = -1;
+		partie->stade_intro = -1;
 		return;
 	}
 	
 	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
-		partie->introduction.stade++;
+		partie->stade_intro++;
 	
 	AfficherLan();
 	
-	partie->introduction.temps++;
-	if (partie->introduction.temps % 60 == 0)
-		partie->introduction.inverser *= -1;
+	int compteur_animation = SDL_GetTicks();
 			
-	switch(partie->introduction.stade)
+	switch(partie->stade_intro)
 	{
 		case 0:
 			for (int i = 0; i < 5; i++)
 				AfficherTexteIntro(10 + i, LARGEUR_FENETRE / 2, 50 + 50 * i);
 			
-			if (partie->introduction.inverser == 1)
-				AfficherGrandeFee(partie->introduction.temps % 60 / 2, 0);
+			if (compteur_animation / 25 % 60 > 30)
+				AfficherGrandeFee(compteur_animation / 50 % 30, 0);
 			else
-				AfficherGrandeFee((60 - partie->introduction.temps % 60) / 2, 0);
+				AfficherGrandeFee(30 - compteur_animation / 50 % 30, 0);
 			break;
 		case 1:
 			for (int i = 0; i < 4; i++)
 				AfficherTexteIntro(15 + i, 50, HAUTEUR_FENETRE / 2 + i * 50);
 			
-			if (partie->introduction.inverser == 1)
-				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + partie->introduction.temps % 60 / 2, HAUTEUR_FENETRE / 3);
+			if (compteur_animation / 25 % 60 > 30)
+				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + compteur_animation / 50 % 30, HAUTEUR_FENETRE / 3);
 			else
-				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + (60 - partie->introduction.temps % 60) / 2, HAUTEUR_FENETRE / 3);					
+				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + (30 - compteur_animation / 50 % 30), HAUTEUR_FENETRE / 3);					
 			break;
 		case 2:
 			for (int i = 0; i < 4; i++)
@@ -58,19 +56,18 @@ void AnimationIntroduction(Partie *partie)
 				AfficherTexteIntro(23 + i, LARGEUR_FENETRE / 2.5, HAUTEUR_FENETRE / 2 - 100 + i * 50);
 
 			
-			if (partie->introduction.inverser == 1)
+			if (compteur_animation / 25 % 60 > 30)
 			{
-				AfficherGrandeFee(partie->introduction.temps % 60 / 2, 0);
-				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + partie->introduction.temps % 60 / 2, HAUTEUR_FENETRE / 3);
+				AfficherGrandeFee(compteur_animation / 50 % 30, 0);
+				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + compteur_animation / 50 % 30, HAUTEUR_FENETRE / 3);
 			}
 			else
 			{
-				AfficherGrandeFee((60 - partie->introduction.temps % 60) / 2, 0);
-				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + (60 - partie->introduction.temps % 60) / 2, HAUTEUR_FENETRE / 3);
+				AfficherGrandeFee(30 - compteur_animation / 50 % 30, 0);
+				AfficherGrandGnome(LARGEUR_FENETRE / 5 * 3 + (30 - compteur_animation / 50 % 30), HAUTEUR_FENETRE / 3);					
 			}
 			break;
 		default:
-			partie->introduction.temps = 0;
 			break;
 	}
 }
@@ -184,36 +181,34 @@ void AnimationFindePartie(Joueur *j, Partie *p)
 	
 	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE || clavier.bouton == ECHAP)
 	{	
-		p->fin.stade++;
-		if (p->fin.stade == 2)
+		p->stade_fin++;
+		if (p->stade_fin == 2)
 			JouerMusique(0);
 	}	
 	
 	AfficherLan();
 	
-	p->fin.temps++;
-	if (p->fin.temps % 60 == 0)
-		p->fin.inverser *= -1;
+	int compteur_animation = SDL_GetTicks();
 			
-	switch(p->fin.stade)
+	switch(p->stade_fin)
 	{
 		case 0:
 			for (int i = 0; i < 4; i++)
 				AfficherTexteIntro(39 + i, LARGEUR_FENETRE / 2, 50 + 50 * i);
 			
-			if (p->fin.inverser == 1)
-				AfficherGrandeFeeFinale(p->fin.temps % 60 / 2, 0);
+			if (compteur_animation / 25 % 60 > 30)
+				AfficherGrandeFeeFinale(compteur_animation / 50 % 30, 0);
 			else
-				AfficherGrandeFeeFinale((60 - p->fin.temps % 60) / 2, 0);
+				AfficherGrandeFeeFinale(30 - compteur_animation / 50 % 30, 0);
 			break;
 		case 1:
 			for (int i = 0; i < 4; i++)
 				AfficherTexteIntro(43 + i, 50, 200 + i * 50);
 			
-			if (p->fin.inverser == 1)
-				AfficherFeeGnome(LARGEUR_FENETRE - 500 + p->fin.temps % 60 / 2, HAUTEUR_FENETRE - 300 - p->fin.temps);
+			if (compteur_animation / 25 % 60 > 30)
+				AfficherFeeGnome(LARGEUR_FENETRE - 500 + compteur_animation / 50 % 30, HAUTEUR_FENETRE - 500);
 			else
-				AfficherFeeGnome(LARGEUR_FENETRE - 500 + (60 - p->fin.temps % 60) / 2, HAUTEUR_FENETRE - 300 - p->fin.temps);
+				AfficherFeeGnome(LARGEUR_FENETRE - 470 - compteur_animation / 50 % 30, HAUTEUR_FENETRE - 500);
 			break;
 		case 2:
 			for (int i = 0; i < 2; i++)
@@ -223,7 +218,6 @@ void AnimationFindePartie(Joueur *j, Partie *p)
 			
 			break;
 		default:
-			p->fin.temps = 0;
 			break;
 	}
 }

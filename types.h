@@ -8,9 +8,9 @@
 #define FPS 16
 
 #define LIGNES_TEXTE 49
-#define NOMBRE_IMAGES 10
+#define NOMBRE_IMAGES 11
 #define NOMBRE_ICONES 7
-#define NOMBRE_TUILES 6
+#define NOMBRE_TUILES 10
 #define NOMBRE_LANGAGES 3
 #define OPTIONS_MENU 3
 #define NOMBRE_PAYS 10
@@ -45,13 +45,6 @@ typedef struct Manette
 	Bouton bouton;
 } Manette;
 
-typedef struct Introduction
-{
-	int stade;
-	int temps;
-	int inverser;
-} Introduction;
-
 typedef struct Partie
 {
 	Etat etat;
@@ -62,8 +55,8 @@ typedef struct Partie
 	int fee_pose_dechets;
 	int en_cours;
 	int en_pause;
-	Introduction introduction;
-	Introduction fin;
+	int stade_intro;
+	int stade_fin;
 } Partie;
 
 typedef struct Pays

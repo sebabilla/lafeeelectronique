@@ -81,6 +81,7 @@ void InitialisationAffichage(void)
 	ChargerImages("res/fee_finale.png", 7);
 	ChargerImages("res/fee_gnome.png", 8);
 	ChargerImages("res/yeux.png", 9);
+	ChargerImages("res/petit_gnome2.png", 10);
 	
 	ChargerIcones("res/card.png", 0);
 	ChargerIcones("res/batterie.png", 1);
@@ -95,7 +96,11 @@ void InitialisationAffichage(void)
 	ChargerTuiles("res/tuile_jaune.png", 2);
 	ChargerTuiles("res/tuile_rouge.png", 3);
 	ChargerTuiles("res/tuile_grise.png", 4);
-	ChargerTuiles("res/tuile_sombre.png", 5);
+	ChargerTuiles("res/assombrir.png", 5);
+	ChargerTuiles("res/fond_gris.png", 6);
+	ChargerTuiles("res/fond_bleu.png", 7);
+	ChargerTuiles("res/pouvoir_recycler.png", 8);
+	ChargerTuiles("res/eclaircir.png", 9);
 }
 
 void ChargerImages(char *l, int i)
@@ -199,17 +204,19 @@ void AfficherTuile(int x, int y, int statut)
 
 void AfficherAchat(int x, int y, int statut)
 {
-	SDL_Rect rect = {x, y, TUILE, TUILE};
+	SDL_Rect rect = {.x = x, .y = y, .w = TUILE, .h = TUILE};
+	if (SDL_RenderCopy(renderer, textures_tuiles[9], NULL, &rect) != 0)
+		SDL_ExitWithError("Impossible d'afficher la texture");
+	
 	if (SDL_RenderCopy(renderer, textures_icones[statut - 1], NULL, &rect) != 0)
 		SDL_ExitWithError("Impossible d'afficher la texture");	
 }
 
 void AfficherTir(int x, int y)
 {
-	if (filledCircleColor(renderer, x, y, 5, ROSE) < 0)
-		SDL_ExitWithError("Impossible d'afficher les tirs");
-	if (circleColor(renderer, x, y, 5, ROUGE) < 0)
-		SDL_ExitWithError("Impossible d'afficher les tirs");
+	SDL_Rect rect = {.x = x, .y = y, .w = 10, .h = 10};
+	if (SDL_RenderCopy(renderer, textures_tuiles[8], NULL, &rect) != 0)
+		SDL_ExitWithError("Impossible d'afficher la texture");
 }
 
 //------------Affichage des terrains------------------------------------
@@ -238,16 +245,16 @@ void AfficherLesTerrainsSansJoueur(const Terrain *t)
 
 void AfficherUnTerrain(const Terrain *t)
 {
-	SDL_Rect rect = {.x = t->pays->x, .y = t->pays->y, .w = 400, .h = 100};
-	if (SDL_RenderCopy(renderer, textures_tuiles[0], NULL, &rect) != 0)
-		SDL_ExitWithError("Impossible d'afficher la texture");
-		
-	SDL_Rect rectb1 = {.x = t->pays->x - TUILE, .y = t->pays->y, .w = TUILE, .h = 100};
+	SDL_Rect rectb1 = {.x = t->pays->x - TUILE, .y = t->pays->y, .w = 40, .h = 100};
 	if (SDL_RenderCopy(renderer, textures_tuiles[1], NULL, &rectb1) != 0)
 		SDL_ExitWithError("Impossible d'afficher la texture");
 		
-	SDL_Rect rectb2 = {.x = t->pays->x + 400, .y = t->pays->y, .w = TUILE, .h = 100};
+	SDL_Rect rectb2 = {.x = t->pays->x + 380, .y = t->pays->y, .w = 40, .h = 100};
 	if (SDL_RenderCopy(renderer, textures_tuiles[1], NULL, &rectb2) != 0)
+		SDL_ExitWithError("Impossible d'afficher la texture");
+	
+	SDL_Rect rect = {.x = t->pays->x, .y = t->pays->y, .w = 400, .h = 100};
+	if (SDL_RenderCopy(renderer, textures_tuiles[0], NULL, &rect) != 0)
 		SDL_ExitWithError("Impossible d'afficher la texture");
 	
 	for (int i = 0; i < LARGEUR_TERRAIN; i++)
@@ -318,8 +325,10 @@ void AfficherJoueur(const Joueur *j)
 	int x = j->terrain_actif->pays->x + j->x * TUILE;
 	int y = j->terrain_actif->pays->y + j->y * TUILE;
 	
-	SDL_Rect rect_illu = {x, y, TUILE, TUILE};
-	if (SDL_RenderCopy(renderer, textures_images[1], NULL, &rect_illu) != 0)
+	SDL_Rect rect = {.x = x, .y = y, .w = TUILE, .h = TUILE};
+	if (SDL_RenderCopy(renderer, textures_tuiles[5], NULL, &rect) != 0)
+		SDL_ExitWithError("Impossible d'afficher la texture");
+	if (SDL_RenderCopy(renderer, textures_images[1], NULL, &rect) != 0)
 		SDL_ExitWithError("Impossible d'afficher la texture");
 }
 
@@ -411,7 +420,7 @@ void EcrireTexteProvisoire(char *texte, int X, int Y, int W, int H)
 void AfficherInfosJoueur(Joueur *j)
 {
 	SDL_Rect rect = {.x = 0, .y = 0, .w = LARGEUR_FENETRE, .h = 60};
-	if (SDL_RenderCopy(renderer, textures_tuiles[4], NULL, &rect) != 0)
+	if (SDL_RenderCopy(renderer, textures_tuiles[6], NULL, &rect) != 0)
 		SDL_ExitWithError("Impossible d'afficher la texture");
 	
 	char annee[5];
@@ -423,7 +432,7 @@ void AfficherInfosJoueur(Joueur *j)
 void AfficherInfosFee(Joueur *j)
 {
 	SDL_Rect rect = {.x = 0, .y = 0, .w = LARGEUR_FENETRE, .h = 60};
-	if (SDL_RenderCopy(renderer, textures_tuiles[4], NULL, &rect) != 0)
+	if (SDL_RenderCopy(renderer, textures_tuiles[6], NULL, &rect) != 0)
 		SDL_ExitWithError("Impossible d'afficher la texture");
 	
 	char annee[5];
@@ -579,8 +588,9 @@ void AfficherTexteIntro(int ligne, int x, int y)
 
 void AfficherDebloque(int ligne, int x, int y)
 {
-	if (roundedBoxColor(renderer, x - TUILE / 2, y - TUILE / 2, x + longueur_texte[ligne] * 8 + TUILE / 2, y + 25 + TUILE / 2, TUILE / 4, BLEU) < 0)
-		SDL_ExitWithError("Impossible d'écrire message debloque");
+	SDL_Rect rect = {.x = x - 10, .y = y - 5, .w = longueur_texte[ligne] * 8 + 20, .h = 35};
+	if (SDL_RenderCopy(renderer, textures_tuiles[7], NULL, &rect) != 0)
+		SDL_ExitWithError("Impossible d'afficher la texture");
 	
 	SDL_Rect message_rect = {.x = x, .y = y, .w = longueur_texte[ligne] * 8, .h = 25};
 	if (SDL_RenderCopy(renderer, texture_textes[ligne], NULL, &message_rect) < 0)
@@ -612,8 +622,15 @@ void AfficherPetitGnome(int position_x, int position_y)
 	SDL_Rect rect_illu = {.w = 2*TUILE, .h = 2.5*TUILE};
 	rect_illu.x = 8 * TUILE + position_x; 
 	rect_illu.y = 0 + position_y;
-	if (SDL_RenderCopy(renderer, textures_images[1], NULL, &rect_illu) != 0)
-		SDL_ExitWithError("Impossible d'afficher la texture");
+	
+	if (SDL_GetTicks() / 400 % 2 == 0)
+	{
+		if (SDL_RenderCopy(renderer, textures_images[1], NULL, &rect_illu) != 0)
+			SDL_ExitWithError("Impossible d'afficher la texture");
+	}
+	else
+		if (SDL_RenderCopy(renderer, textures_images[10], NULL, &rect_illu) != 0)
+			SDL_ExitWithError("Impossible d'afficher la texture");
 }
 
 void AfficherPousser(int position_x, int position_y)

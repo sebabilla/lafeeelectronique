@@ -27,12 +27,8 @@ Partie *InitialisationPartie(void)
 	p->fee_pose_dechets = 0;
 	p->en_cours = 1;
 	p->en_pause = 1;
-	p->introduction.stade = 0;
-	p->introduction.temps = 0;
-	p->introduction.inverser = 1;
-	p->fin.stade = 0;
-	p->fin.temps = 0;
-	p->fin.inverser = 1;
+	p->stade_intro = 0;
+	p->stade_fin = 0;
 	
 	return p;
 }
@@ -474,7 +470,7 @@ int RencontreDechet(Joueur *j, Direction d)
 
 void DetruireDechet(Joueur *j, Direction d)
 {
-	if (j->x > LARGEUR_TERRAIN - 1) // eviter cas de fin d'année
+	if (j->x > LARGEUR_TERRAIN) // eviter cas de fin d'année
 		return;
 	
 	switch(d)

@@ -98,15 +98,15 @@ void BouclePrincipale(void)
 		
 			AnimationIntroduction(partie);
 			
-			if (partie->introduction.stade > 2)
+			if (partie->stade_intro > 2)
 			{
-				partie->introduction.stade = 0;
+				partie->stade_intro = 0;
 				partie->etat = MENU_PRINCIPAL;
 				JouerMusique(1);
 			}
-			else if (partie->introduction.stade == -1)
+			else if (partie->stade_intro == -1)
 			{
-				partie->introduction.stade = 0;
+				partie->stade_intro = 0;
 				partie->langage = -1;
 				partie->etat = CHOIX_LANGUE;
 				Mix_FadeOutMusic(500);
@@ -132,7 +132,7 @@ void BouclePrincipale(void)
 			}
 			else if (choix == -1)
 			{
-				partie->introduction.stade = 0;
+				partie->stade_intro = 0;
 				partie->langage = -1;
 				partie->etat = CHOIX_LANGUE;
 				Mix_FadeOutMusic(500);
@@ -230,9 +230,9 @@ void BouclePrincipale(void)
 		case FIN_DE_PARTIE:
 			AnimationFindePartie(joueur, partie);
 			
-			if (partie->fin.stade > 2)
+			if (partie->stade_fin > 2)
 			{
-				partie->fin.stade = 0;
+				partie->stade_fin = 0;
 				partie->etat = MENU_PRINCIPAL;
 				JouerMusique(1);
 			}
