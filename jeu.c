@@ -4,6 +4,8 @@
 
 #include "types.h"
 #include "controle.h"
+#include "animations.h"
+#include "musique.h"
 #include "jeu.h"
 
 
@@ -19,6 +21,8 @@ Partie *InitialisationPartie(void)
 	
 	p->etat = CHOIX_LANGUE;
 	p->langage = -1;
+	p->menu = 0;
+	p->debloque = 0;
 	p->programme_en_cours = 1;
 	p->fee_pose_dechets = 0;
 	p->en_cours = 1;
@@ -26,6 +30,9 @@ Partie *InitialisationPartie(void)
 	p->introduction.stade = 0;
 	p->introduction.temps = 0;
 	p->introduction.inverser = 1;
+	p->fin.stade = 0;
+	p->fin.temps = 0;
+	p->fin.inverser = 1;
 	
 	return p;
 }
@@ -36,10 +43,10 @@ void LibererPartie(Partie *p)
 	p = NULL;
 }
 
-void Choixlangage(Partie *p, Clavier c)
+void ChoixLangage(Partie *p, Clavier c)
 {
 	if (c.direction == BAS)
-		if (p->langage > -4)
+		if (p->langage > -NOMBRE_LANGAGES)
 			p->langage--;
 	
 	if (c.direction == HAUT)
@@ -62,7 +69,38 @@ int ActionsLangage(Partie *partie)
 		return 1;
 	}
 		
-	Choixlangage(partie, clavier);
+	ChoixLangage(partie, clavier);
+	return 0;	
+}
+
+void ChoixMenu(Partie *p, Clavier c)
+{
+	if (c.direction == GAUCHE)
+		if (p->menu > 0)
+			p->menu--;
+	
+	if (c.direction == DROITE)
+		if (p->menu < OPTIONS_MENU - 1)
+			p->menu++;
+}
+
+int ActionsMenu(Partie *partie)
+{
+	Clavier clavier = EntreeJoueur();
+	
+	if (clavier.bouton == FERMERFENETRE)
+	{
+		partie->programme_en_cours = 0;
+		return 0;
+	}
+	if (clavier.bouton == ECHAP)
+		return -1;
+	
+	
+	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
+		return 1;
+		
+	ChoixMenu(partie, clavier);
 	return 0;	
 }
 
@@ -82,17 +120,17 @@ void InitialiserTerrain(Terrain *t, Pays *pays)
 {
 	t->pays = pays;
 	t->statut = 0;
-	for (int i = 0; i < LARGEUR_TERRAIN + 2; i ++)
+	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
-			if (i == 0 || i == LARGEUR_TERRAIN + 1)
-				t->matrice[i][j] = -1;
-			else
 				t->matrice[i][j] = 0;
-	for (int i = 0; i < LARGEUR_TERRAIN; i ++)
+	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
 			t->matrice_dechets[i][j] = 0;
+			
+	t->recyclable = 0;
 	
 	t->suivant = NULL;
+	t->precedent = NULL;
 }
 
 void AjouterTerrainFin(Terrain *t, Pays *pays)
@@ -103,12 +141,11 @@ void AjouterTerrainFin(Terrain *t, Pays *pays)
 		InitialiserTerrain(temp, pays);
 	
 		t->suivant = temp;
+		t->suivant->precedent = t;
 		return;
 	}
 		
 	AjouterTerrainFin(t->suivant, pays);
-		
-	
 }
 
 void LibererTerrain(Terrain *t)
@@ -141,16 +178,17 @@ void InitialiserJoueur(Joueur *j, Terrain *t)
 {
 	j->terrain_actif = t;
 	j->recyclage = PotentielRecyclage(t);
-	j->x = 0;
+	j->x = -1;
 	j->y = 0;
 	j->annee = 2021;
 	j->temps = 0;
+	InitialiserTableauAnimation(j);
 }
 
 int PotentielRecyclage(Terrain *t)
 {
 	int compteur = 0;
-	for (int i = 1; i <= LARGEUR_TERRAIN; i++)
+	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
 			compteur += t->matrice[i][j];;
 	float potentiel = (float)t->pays->ratio_lineaire * compteur / 100;
@@ -178,7 +216,7 @@ void ActionJoueur(Joueur *j, Partie *p)
 		
 	if (clavier.bouton == ESPACE && 
 			clavier.direction != RIEN 
-			&& j->recyclage > 0)
+			&& j->terrain_actif->recyclable > 0)
 		DetruireDechet(j, clavier.direction);
 		
 	if (clavier.bouton == ENTREE && 
@@ -207,30 +245,37 @@ void BougerJoueur(Joueur *j, Clavier c)
 	switch(c.direction)
 	{
 		case HAUT:
-			if (j->y <= 0 || RencontreDechet(j, c.direction) == 1)
+			if (j->y < 1 || RencontreDechet(j, c.direction) == 1)
 				return;
 			else
 				j->y--;
 			break;
 		case BAS:
-			if (j->y >= HAUTEUR_TERRAIN - 1 || RencontreDechet(j, c.direction) == 1)
+			if (j->y > HAUTEUR_TERRAIN - 2 || RencontreDechet(j, c.direction) == 1)
 				return;
 			else
 				j->y++;
 			break;
 		case GAUCHE:
-			if (j->x <= 0 || RencontreDechet(j, c.direction) == 1)
+			if (j->x < 0)
+			{
+				if (j->terrain_actif->precedent != NULL)
+					ChangerTerrainActifPrecedent(j);
+				else
+					return;
+			}
+			if (RencontreDechet(j, c.direction) == 1)
 				return;
 			else
 				j->x--;
 			break;
 		case DROITE:
-			if (j->x >= LARGEUR_TERRAIN + 1)
+			if (j->x >= LARGEUR_TERRAIN)
 			{
 				if (j->terrain_actif->suivant != NULL)
-					ChangerTerrainActif(j);
+					ChangerTerrainActifSuivant(j);
 				else
-					return;
+					j->x++;
 			}
 			else if (RencontreDechet(j, c.direction) == 1)
 				return;
@@ -242,10 +287,17 @@ void BougerJoueur(Joueur *j, Clavier c)
 	} 
 }
 
-void ChangerTerrainActif(Joueur *j)
+void ChangerTerrainActifSuivant(Joueur *j)
 {
-	j->x = 0;
+	j->x = -1;
 	j->terrain_actif = j->terrain_actif->suivant;
+	j->recyclage = PotentielRecyclage(j->terrain_actif);
+}
+
+void ChangerTerrainActifPrecedent(Joueur *j)
+{
+	j->x = LARGEUR_TERRAIN + 1;
+	j->terrain_actif = j->terrain_actif->precedent;
 	j->recyclage = PotentielRecyclage(j->terrain_actif);
 }
 
@@ -261,63 +313,99 @@ void NouvelleAnnee(Joueur *j, Partie *p, Terrain *t)
 {
 	p->etat = NOUVELLE_ANNEE;
 	j->terrain_actif = t;
-	j->x = 0;
+	j->x = -1;
 	j->y = 0;
 	j->annee++;
 	j->recyclage = PotentielRecyclage(j->terrain_actif);
+	
+	
+}
+
+void DebloquerMode(Joueur *j, Partie *p)
+{
+	int lancer_anim = 0;
+	
+	if (j->annee == 2023 && p->debloque == 0)
+	{
+		p->debloque = 1;
+		lancer_anim = 1;
+	} 
+	if (j->annee == 2027 && p->debloque == 1)
+	{
+		p->debloque = 2;
+		lancer_anim = 1;
+	}
+	if (j->annee == 2030 && p->debloque == 2)
+	{
+		p->debloque = 3;
+		lancer_anim = 1;
+	}
+	if (lancer_anim == 1)
+	{	
+		JouerBruitage(9);
+		j->animation[ANIM_RECYCLER].temps = 400; // position de ANIM_DEBLOQUE
+		j->animation[ANIM_RECYCLER].x = 2 * TUILE;
+		j->animation[ANIM_RECYCLER].y = HAUTEUR_FENETRE - 3 * TUILE;
+	}
 }
 
 
 //------------Gestion Dechets-------------------------------------------
 
+int RandomDechet(int actuel)
+{
+	if (actuel == 0)
+		return rand() % 3 + 1;
+	if (actuel == 1)
+		return rand() % 5 + 1;
+	if (actuel == 2)
+		return rand() % 7 + 1;
+	
+	return 0;
+}
+
 int GenererDechets(Terrain *t)
 {
-	int terrain_actuel[LARGEUR_TERRAIN * HAUTEUR_TERRAIN] = {0};
-		
-	for (int i = 1; i < LARGEUR_TERRAIN + 1; i ++)
-		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
-			terrain_actuel[j * LARGEUR_TERRAIN + i] = t->matrice[i][j];
-			
-	int nouveaux_dechets[LARGEUR_TERRAIN * HAUTEUR_TERRAIN] = {0};
 	int compteur_dechets = 0;
 	
+	for (int i = 0; i < LARGEUR_TERRAIN;i ++)
+		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
+			t->matrice_dechets[i][j] = 0;
+	
 	for (int limite = 0; limite < 1000; limite++)
-		for (int m = 0; m < LARGEUR_TERRAIN * HAUTEUR_TERRAIN; m++)
-		{
-			switch(terrain_actuel[m])
+		for (int i = 0; i < LARGEUR_TERRAIN; i++)
+			for (int j = 0; j < HAUTEUR_TERRAIN; j++)
 			{
-				case 0:
-					if (rand() % 100 == 0 && nouveaux_dechets[m] == 0)
+				if (t->matrice_dechets[i][j] == 0)
+					switch(t->matrice[i][j])
 					{
-						nouveaux_dechets[m] = 1;
-						compteur_dechets++;
+						case 0:
+							if (rand() % 100 == 0)
+							{
+								t->matrice_dechets[i][j] = RandomDechet(0);
+								compteur_dechets++;
+							}
+							break;
+						case 1:
+							if (rand() % 200 == 0)
+							{
+								t->matrice_dechets[i][j] = RandomDechet(1);
+								compteur_dechets++;
+							}
+							break;
+						case 2:
+							if (rand() % 300 == 0)
+							{
+								t->matrice_dechets[i][j] = RandomDechet(2);
+								compteur_dechets++;
+							}
+							break;
+						default:
+							break;
 					}
-					break;
-				case 1:
-					if (rand() % 200 == 0 && nouveaux_dechets[m] == 0)
-					{
-						nouveaux_dechets[m] = 1;
-						compteur_dechets++;
-					}
-					break;
-				case 2:
-					if (rand() % 300 == 0 && nouveaux_dechets[m] == 0)
-					{
-						nouveaux_dechets[m] = 1;
-						compteur_dechets++;
-					}
-					break;
-				default:
-					break;
+				if (compteur_dechets >= t->pays->dechets_electroniques)
+					return 1;
 			}
-			if (compteur_dechets >= t->pays->dechets_electroniques)
-			{
-				for (int i = 0; i < LARGEUR_TERRAIN;i ++)
-					for (int j = 0; j < HAUTEUR_TERRAIN; j++)
-						t->matrice_dechets[i][j] = nouveaux_dechets[j * LARGEUR_TERRAIN + i];
-				return 1;
-			}
-		}
 	return 0;	
 }
 
@@ -330,9 +418,12 @@ void GenererTousLesDechets(Terrain *t)
 
 void AjouterDechets(Terrain *t)
 {
-	for (int i = 0; i < LARGEUR_TERRAIN; i ++)
+	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
-			t->matrice[i + 1][j] += t->matrice_dechets[i][j];
+			if (t->matrice_dechets[i][j] > 0)
+				t->matrice[i][j]++;
+			
+	t->recyclable = PotentielRecyclage(t);
 }
 
 void AjouterTousLesDechets(Terrain *t)
@@ -346,21 +437,32 @@ void AjouterTousLesDechets(Terrain *t)
 
 int RencontreDechet(Joueur *j, Direction d)
 {
+	if (j->x > LARGEUR_TERRAIN) // eviter cas de fin d'année
+		return 0;
+	
 	switch(d)
 	{
 		case HAUT:
+			if (j->x < 0 || j->x > LARGEUR_TERRAIN - 1)
+				return 0;
 			if (j->terrain_actif->matrice[j->x][j->y - 1] > 0)
 				return 1;
 			break;
 		case BAS:
+			if (j->x < 0 || j->x > LARGEUR_TERRAIN - 1)
+				return 0;
 			if (j->terrain_actif->matrice[j->x][j->y + 1] > 0)
 				return 1;
 			break;
 		case GAUCHE:
+			if (j->x <= 0)
+				return 0;			
 			if (j->terrain_actif->matrice[j->x - 1][j->y] > 0)
 				return 1;
 			break;
 		case DROITE:
+			if (j->x >= LARGEUR_TERRAIN - 1)
+				return 0;
 			if (j->terrain_actif->matrice[j->x + 1][j->y] > 0)
 				return 1;
 			break;
@@ -372,6 +474,9 @@ int RencontreDechet(Joueur *j, Direction d)
 
 void DetruireDechet(Joueur *j, Direction d)
 {
+	if (j->x > LARGEUR_TERRAIN - 1) // eviter cas de fin d'année
+		return;
+	
 	switch(d)
 	{
 		case HAUT:
@@ -380,7 +485,9 @@ void DetruireDechet(Joueur *j, Direction d)
 						j->terrain_actif->matrice[j->x][j->y - 1] < 3)
 				{
 					j->terrain_actif->matrice[j->x][j->y - 1]--;
-					j->recyclage--;
+					j->terrain_actif->recyclable--;
+					AjouterAnimRecyclage(j);
+					JouerBruitage(6);
 				}
 			return;
 			break;
@@ -390,27 +497,33 @@ void DetruireDechet(Joueur *j, Direction d)
 						j->terrain_actif->matrice[j->x][j->y + 1] < 3)
 				{
 					j->terrain_actif->matrice[j->x][j->y + 1]--;
-					j->recyclage--;
+					j->terrain_actif->recyclable--;
+					AjouterAnimRecyclage(j);
+					JouerBruitage(6);
 				}
 			return;
 			break;
 		case GAUCHE:
-			if (j->x > 1)
+			if (j->x > 0)
 				if (j->terrain_actif->matrice[j->x - 1][j->y] > 0 &&
 						j->terrain_actif->matrice[j->x - 1][j->y] < 3)
 				{
 					j->terrain_actif->matrice[j->x - 1][j->y]--;
-					j->recyclage--;
+					j->terrain_actif->recyclable--;
+					AjouterAnimRecyclage(j);
+					JouerBruitage(6);
 				}
 			return;
 			break;
 		case DROITE:
-			if (j->x < LARGEUR_TERRAIN)
+			if (j->x < LARGEUR_TERRAIN - 1)
 				if (j->terrain_actif->matrice[j->x + 1][j->y] > 0 &&
 						j->terrain_actif->matrice[j->x + 1][j->y] < 3)
 				{
 					j->terrain_actif->matrice[j->x + 1][j->y]--;
-					j->recyclage--;
+					j->terrain_actif->recyclable--;
+					AjouterAnimRecyclage(j);
+					JouerBruitage(6);
 				}
 			return;
 			break;
@@ -422,6 +535,10 @@ void DetruireDechet(Joueur *j, Direction d)
 
 void PousserDechet(Joueur *j, Direction d)
 {
+	if (j->x > LARGEUR_TERRAIN + 1) // eviter cas de fin d'année
+		return;
+	
+	AnimationPousser(j);
 	switch(d)
 	{
 		case HAUT:
@@ -431,6 +548,7 @@ void PousserDechet(Joueur *j, Direction d)
 				{
 					j->terrain_actif->matrice[j->x][j->y - 1]--;
 					j->terrain_actif->matrice[j->x][j->y - 2]++;
+					JouerBruitage(7);
 				}
 			return;
 			break;
@@ -441,26 +559,29 @@ void PousserDechet(Joueur *j, Direction d)
 				{
 					j->terrain_actif->matrice[j->x][j->y + 1]--;
 					j->terrain_actif->matrice[j->x][j->y + 2]++;
+					JouerBruitage(7);
 				}
 			return;
 			break;
 		case GAUCHE:
-			if (j->x > 2)
+			if (j->x > 1)
 				if (j->terrain_actif->matrice[j->x - 1][j->y] == 1 &&
 						j->terrain_actif->matrice[j->x - 2][j->y] == 0)
 				{
 					j->terrain_actif->matrice[j->x - 1][j->y]--;
 					j->terrain_actif->matrice[j->x - 2][j->y]++;
+					JouerBruitage(8);
 				}
 			return;
 			break;
 		case DROITE:
-			if (j->x < LARGEUR_TERRAIN)
+			if (j->x < LARGEUR_TERRAIN - 2)
 				if (j->terrain_actif->matrice[j->x + 1][j->y] == 1 &&
 						j->terrain_actif->matrice[j->x + 2][j->y] == 0)
 				{
 					j->terrain_actif->matrice[j->x + 1][j->y]--;
 					j->terrain_actif->matrice[j->x + 2][j->y]++;
+					JouerBruitage(8);
 				}
 			return;
 			break;

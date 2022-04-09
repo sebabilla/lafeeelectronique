@@ -14,6 +14,7 @@
 #include "affichage.h"
 #include "musique.h"
 #include "animations.h"
+#include "controle.h"
 
 Partie *partie;
 Terrain *liste_terrains;
@@ -53,11 +54,15 @@ int main(int argc, char *argv[])
 	
 //------------Sortie de la boucle, on nettoie tout----------------------
 	
+	if (partie->etat != CHOIX_LANGUE)
+		DetruireTextes();
+		
+	if (partie->etat != CHOIX_LANGUE && partie->etat != INTRODUCTION && partie->etat != MENU_PRINCIPAL)
+		DetruireTerrains(liste_terrains);
+	
 	LibererPartie(partie);
 	
 	LibererJoueur(joueur);
-	
-	DetruireTerrains(liste_terrains);
 	
 	DestructionSon();
 	
@@ -83,9 +88,11 @@ void BouclePrincipale(void)
 			{
 				ChargerTextes(partie->langage);
 				partie->etat = INTRODUCTION;
-				//JouerBruitage(7);
+				JouerBruitage(9);
+				JouerMusique(0);
 			}
 			break;
+			
 		
 		case INTRODUCTION:
 		
@@ -94,14 +101,43 @@ void BouclePrincipale(void)
 			if (partie->introduction.stade > 2)
 			{
 				partie->introduction.stade = 0;
-				partie->etat = NOUVELLE_PARTIE;
+				partie->etat = MENU_PRINCIPAL;
+				JouerMusique(1);
 			}
 			else if (partie->introduction.stade == -1)
 			{
 				partie->introduction.stade = 0;
 				partie->langage = -1;
 				partie->etat = CHOIX_LANGUE;
+				Mix_FadeOutMusic(500);
 			}				
+			break;
+			
+		case MENU_PRINCIPAL:
+			
+			AfficherMenu(partie);
+			
+			AfficherTitre();
+			
+			int choix = ActionsMenu(partie);
+			
+			if (choix == 1)
+			{
+				if (partie->menu == 0)
+				{
+					partie->etat = NOUVELLE_PARTIE;
+					Mix_FadeOutMusic(500);
+					JouerBruitage(9);
+				}
+			}
+			else if (choix == -1)
+			{
+				partie->introduction.stade = 0;
+				partie->langage = -1;
+				partie->etat = CHOIX_LANGUE;
+				Mix_FadeOutMusic(500);
+			}
+				
 			break;
 		
 		case NOUVELLE_PARTIE:
@@ -111,6 +147,7 @@ void BouclePrincipale(void)
 				AjouterTerrainFin(liste_terrains, &pays[i]);
 			
 			InitialiserJoueur(joueur, liste_terrains);
+			
 			partie->etat = NOUVELLE_ANNEE;
 			break;
 		
@@ -121,44 +158,84 @@ void BouclePrincipale(void)
 			
 			partie->fee_pose_dechets++;
 			
-			if (partie->fee_pose_dechets < LARGEUR_TERRAIN * 20 - 1)
+			if (partie->fee_pose_dechets < LARGEUR_TERRAIN * 15 - 1)
+			{
 				AnimationFeeNouvelleAnnee1(partie, joueur, liste_terrains);
-			
-			else if (partie->fee_pose_dechets == LARGEUR_TERRAIN * 20 - 1)
-				AjouterTousLesDechets(liste_terrains);
-			
-			else if (partie->fee_pose_dechets <= LARGEUR_TERRAIN * 23 - 1)
-				AnimationFeeNouvelleAnnee2(partie, joueur, liste_terrains);
-			
+			}		
 			else
-			{			
-				partie->fee_pose_dechets = 0;
-				NouvelleAnnee(joueur, partie, liste_terrains);			
-				partie->etat = EN_COURS;
+			{
+				if (partie->fee_pose_dechets == LARGEUR_TERRAIN * 15 - 1)
+				{
+					AjouterTousLesDechets(liste_terrains);
+					JouerBruitage(5);
+					
+				}
+				else if (partie->fee_pose_dechets == LARGEUR_TERRAIN * 20)
+				{			
+					partie->fee_pose_dechets = 0;
+					NouvelleAnnee(joueur, partie, liste_terrains);
+					if (joueur->annee < 2027)
+						JouerMusique(2);
+					else if (joueur->annee == 2031)
+						JouerMusique(0);
+					else
+						JouerMusique(3);
+					partie->etat = EN_COURS;
+				}
+				AnimationFeeNouvelleAnnee2(partie, joueur, liste_terrains);
 			}
+			
+			if (joueur->animation[ANIM_RECYCLER].temps > 0) // position de ANIM_DEBLOQUE
+					AnimationDebloques(joueur);				
+			
 			break;
 		
 		case EN_COURS:
 		
-			ActionJoueur(joueur, partie); // La grosse fonction de jeu
-
-			AfficherInfosJoueur(joueur);
-			
-			AfficherPetiteGnomette(joueur->x, joueur->y);	
+			ActionJoueur(joueur, partie); // La grosse fonction de jeu	
 			
 			AfficherLesTerrainsAvecJoueur(liste_terrains, joueur);
 			
 			AfficherJoueur(joueur);
 			
+			AfficherInfosJoueur(joueur);
+			
+			AnimationsJoueur(joueur);
+			
 			if (AnneeFinie(joueur) == 1)
-				partie->etat = NOUVELLE_ANNEE;
+			{
+				if (joueur->annee == 2031)
+				{
+						partie->etat = FIN_DE_PARTIE;
+						JouerMusique(4);
+				}
+						
+				else
+				{
+					partie->etat = NOUVELLE_ANNEE;
+					DebloquerMode(joueur, partie);
+					Mix_FadeOutMusic(500);
+				}
+			}
 				
 			if (partie->en_cours == 0)
 			{
 				partie->etat = PAUSE;
-				partie->en_cours = 1;				
+				partie->en_cours = 1;
+				PauseMusique();				
 			}
 				
+			break;
+			
+		case FIN_DE_PARTIE:
+			AnimationFindePartie(joueur, partie);
+			
+			if (partie->fin.stade > 2)
+			{
+				partie->fin.stade = 0;
+				partie->etat = MENU_PRINCIPAL;
+				JouerMusique(1);
+			}
 			break;
 			
 		case PAUSE:
@@ -167,7 +244,7 @@ void BouclePrincipale(void)
 			
 			AfficherInfosJoueur(joueur);
 			
-			AfficherPetiteGnomette(joueur->x, joueur->y);
+			AfficherPetitGnome(joueur->x, joueur->y);
 			
 			AfficherLesTerrainsAvecJoueur(liste_terrains, joueur);
 			
@@ -176,13 +253,15 @@ void BouclePrincipale(void)
 			if (partie->en_pause == 0)
 			{
 				partie->etat = EN_COURS;
-				partie->en_pause = 1;				
+				partie->en_pause = 1;
+				PauseMusique();				
 			}
 			
 			if (partie->en_pause == -1)
 			{
-				partie->etat = INTRODUCTION;
-				partie->en_pause = 1;				
+				partie->etat = MENU_PRINCIPAL;
+				partie->en_pause = 1;
+				JouerMusique(1);				
 			}
 			break;
 		

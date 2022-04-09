@@ -1,5 +1,5 @@
-SouthAfrica 0 7 4
-Uganda 1 1 1
+Cameroon 0 1 1
+SouthAfrica 1 7 4
 Canada 2 20 13
 Chile 3 10 3
 China 4 7 15

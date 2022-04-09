@@ -1,19 +1,13 @@
 #ifndef __AFFICHAGE_H__
 #define __AFFICHAGE_H__
 
-#define LARGEUR_FENETRE 1024
-#define HAUTEUR_FENETRE 768
-#define FPS 16
-
-#define LIGNES_TEXTE 32
-#define NOMBRE_LANGAGES 4
-#define NOMBRE_IMAGES 4
-
 #define NOIR 0xFF000000
+#define SOMBRE 0x90000000
 #define GRIS 0xFF4D4D4D
+#define GRIS_FONCE 0xFF202020
 #define ROUGE 0xFF0000FF
 #define VERT 0xFF008000
-#define BLEU 0xFFFF901E
+#define BLEU 0xFF844300
 #define JAUNE 0xFF00FFFF
 #define ROSE 0xFFC693FE
 #define MARRON 0xFF024EAE
@@ -31,14 +25,14 @@ void DestructionAffichage(void);
 //------------Affichage de l'unite de base------------------------------
 
 void AfficherTuile(const int x, const int y, const int statut);
-void AfficherMiniTuile(int x, int y, int statut);
+void AfficherAchat(int x, int y, int statut);
+void AfficherTir(int x, int y);
 
 //------------Affichage des terrains------------------------------------
 void AfficherLesTerrainsAvecJoueur(const Terrain *t, const Joueur *j);
 void AfficherLesTerrainsSansJoueur(const Terrain *t);
 void AfficherUnTerrain(const Terrain *t);
 void AssombrirTerrain(const Terrain *t);
-void IlluminerTerrain(const Terrain *t);
 void InfosTerrainActif(const Terrain *t, const Joueur *j);
 void ApparitionColonneDechets(const Terrain *t, const int i);
 void ApparitionDUnDechet(const Terrain *t, const int i, const int j);
@@ -51,6 +45,7 @@ void ChargerTextes(int l);
 int VerificationLangage(const char *s);
 SDL_Texture *TextureTexte(char *texte, int i);
 void TextesTraduits(char *l);
+void DetruireTextes(void);
 void EcrireTexteProvisoire(char *texte, int X, int Y, int W, int H);
 void AfficherInfosJoueur(Joueur *j);
 void AfficherInfosFee(Joueur *j);
@@ -58,15 +53,25 @@ void AfficherBravo(void);
 void AfficherPause(void);
 void TextureLangages(void);
 void AfficherLangage(int l);
+void AfficherTitre(void);
+void AfficherMenu(Partie *p);
 void AfficherTexteIntro(int ligne, int x, int y);
+void AfficherDebloque(int ligne, int x, int y);
 
 //------------Affichage des images--------------------------------------
 void ChargerImages(char *l, int i);
+void ChargerIcones(char *l, int i);
+void ChargerTuiles(char *l, int i);
 void AfficherFondGris(void);
 void AfficherPetiteFee(int position_x);
-void AfficherPetiteGnomette(int position_x, int position_y);
+void AfficherPetitGnome(int position_x, int position_y);
+void AfficherPousser(int position_x, int position_y);
 void AfficherGrandeFee(int x, int y);
-void AfficherGrandeGnomette(int x, int y);
+void AfficherGrandeFeeFinale(int x, int y);
+void AfficherGrandGnome(int x, int y);
+void AfficherFeeGnome(int x, int y);
+void AfficherLan(void);
+void AfficherYeux(void);
  
 
 #endif

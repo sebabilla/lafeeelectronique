@@ -1,19 +1,19 @@
-Afrique du Sud
-Ouganda
-Canada
-Chili
-Chine
-Inde
-Japon
-Bulgarie
-France
-Australie
+Aissatou au Cameroun
+Melokuhle en Afrique du Sud
+Amelia au Canada
+Mateo au Chili
+Ruòxī en Chine
+Aarav en Inde
+Himari au Japon
+Aleksandar en Bulgarie
+Louise en France
+Oliver en Australie
 La Fée Electronique est toute puissante.
 Presque tous les habitants du monde ont 
 succombé à ses charmes.
 Sous l’emprise de la fée, ils consomment,
 encore et encore.
-Tu es un gnome anonyme, petit, mais brave.
+Tu es une gnomette au cœur toujours empli d'espoir.
 Ta mission est d’aider dix habitants de
 cette planète à se frayer un chemin au sein
 de leurs vies chaotiques de consommateurs.
@@ -21,7 +21,7 @@ La Fée Electronique va tout faire pour submerger
 ces personnes sous des montagnes d’appareils, 
 gardés “au cas ou”, obsolètes, ou simplement 
 oubliés dans un coin.
-Pour l’en empêcher, petit gnome,
+Pour l’en empêcher,
 tu peux aider les humains à
 ranger leur bazar et à 
 utiliser les options de 
@@ -30,3 +30,29 @@ dans leur pays.
 Achète humain, achète!
 Recyclage des e-déchets en
 PAUSE
+La Fée Electronique
+Situation actuelle
+Amélioration de 20 %
+Crédits
+Bravo, tu as débloqué les crédits!
+Bravo, tu as débloqué le mode amélioration de 20 % du recyclage mondiale!
+Bravo, tu as atteint la dixième et dernière année, c'est le dernier combat!
+Bravo Gnomette!
+Tu as réussi à contrarier les plans
+de la Fée Electronique pendant 10 ans
+et à la faire revenir à la raison!
+La Fée n'a pas toujours été aussi cupide.
+Elle s'était laissée corrompre par un mal bien 
+plus puissant, et elle avait oublié sa mission
+première de soutenir les humains.
+Ne relâche pas ton attention, le mal rôde toujours.
+Prépare-toi à affronter le Grand Démon Marketing...
+Tuto: Traverse le champ des achats de matériel électronique de chaque humain de gauche à droite.
+Tuto: Tu peux faire de la place en poussant les achats dans les coins avec Flèche + Entrée.
+Tuto: Tu peux envoyer les achats encombrant au recyclage avec Flèche + Espace.
+Tuto: Facile, non? Ta mission est d'aider les humains pendant 10 années.
+Tuto: Le potentiel de recyclage du matériel électronique varie selon les pays.
+Tuto: Tu commences à voir se profiler le problème?
+Tuto: Tu ne peux pas pousser les tas de matériel rouge ou gris.
+Tuto: Tu peux envoyer le dessus d'un tas de matériel rouge au recyclage.
+Tuto: Courage Gnomette! Les humains ont besoin de toi!

@@ -1,8 +1,8 @@
 #ifndef __MUSIQUE_H__
 #define __MUSIQUE_H__
 
-#define NB_MUSIQUES 6
-#define NB_BRUITAGES 8
+#define NB_MUSIQUES 5
+#define NB_BRUITAGES 10
 
 void InitialisationSon(void);
 void DestructionSon(void);
@@ -13,5 +13,8 @@ void PauseMusique(void);
 
 Mix_Chunk *ChargementBruitages(const char *lien);
 void JouerBruitage(int b);
+
+void JouerDechets(const Terrain *t, const int i);
+int JouerUnDechet(const Terrain *t, const int i, const int j);
 
 #endif

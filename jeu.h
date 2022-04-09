@@ -6,8 +6,10 @@
 //------------Initialisation et rechargement----------------------------
 Partie *InitialisationPartie(void);
 void LibererPartie(Partie *p);
-void Choixlangage(Partie *p, Clavier c);
+void ChoixLangage(Partie *p, Clavier c);
 int ActionsLangage(Partie *partie);
+void ChoixMenu(Partie *p, Clavier c);
+int ActionsMenu(Partie *partie);
 
 //------------Gestion terrain-------------------------------------------
 Terrain *NouveauTerrain(void);
@@ -24,11 +26,14 @@ void LibererJoueur(Joueur *j);
 void ActionJoueur(Joueur *j, Partie *p);
 void ActionPause(Joueur *j, Partie *p);
 void BougerJoueur(Joueur *j, Clavier c);
-void ChangerTerrainActif(Joueur *j);
+void ChangerTerrainActifSuivant(Joueur *j);
+void ChangerTerrainActifPrecedent(Joueur *j);
 int AnneeFinie(Joueur *j);
 void NouvelleAnnee(Joueur *j, Partie *p, Terrain *t);
+void DebloquerMode(Joueur *j, Partie *p);
 
 //------------Gestion Dechets-------------------------------------------
+int RandomDechet(int actuel);
 int GenererDechets(Terrain *t);
 void GenererTousLesDechets(Terrain *t);
 void AjouterDechets(Terrain *t);

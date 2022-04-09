@@ -13,12 +13,12 @@ void InitialiserPays(Pays *pays)
 		pays[i] = LirePays(i);
 		if (i % 2 == 0)
 		{
-			pays[i].x = 3 * TUILE;
+			pays[i].x = 4 * TUILE;
 			pays[i].y = 4 * TUILE + i / 2 * (2 + HAUTEUR_TERRAIN) * TUILE;
 		}
 		else
 		{
-			pays[i].x = 4 * TUILE + (2 + LARGEUR_TERRAIN) * TUILE;
+			pays[i].x = 5 * TUILE + (2 + LARGEUR_TERRAIN) * TUILE;
 			pays[i].y = 4 * TUILE + (i - 1) / 2 * (2 + HAUTEUR_TERRAIN) * TUILE;
 		}
 	}
