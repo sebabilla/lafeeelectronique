@@ -17,23 +17,6 @@ void InitialisationSon(void)
 		printf("Mix_OpenAudio: %s\n", Mix_GetError());
 		exit(EXIT_FAILURE);;
 	}
-		
-	musiques[0] = ChargementMusique("res/musique_intro.ogg");
-	musiques[1] = ChargementMusique("res/musique_menu.ogg");
-	musiques[2] = ChargementMusique("res/musique_en_jeu1.ogg");
-	musiques[3] = ChargementMusique("res/musique_en_jeu2.ogg");
-	musiques[4] = ChargementMusique("res/musique_fin.ogg");
-	
-	bruitages[0] = ChargementBruitages("res/argent0.ogg");
-	bruitages[1] = ChargementBruitages("res/argent1.ogg");
-	bruitages[2] = ChargementBruitages("res/argent2.ogg");
-	bruitages[3] = ChargementBruitages("res/argent3.ogg");
-	bruitages[4] = ChargementBruitages("res/argent4.ogg");
-	bruitages[5] = ChargementBruitages("res/caisse.ogg");
-	bruitages[6] = ChargementBruitages("res/bulle.ogg");
-	bruitages[7] = ChargementBruitages("res/frottement1.ogg");
-	bruitages[8] = ChargementBruitages("res/frottement2.ogg");
-	bruitages[9] = ChargementBruitages("res/cloche.ogg");
 
 	Mix_AllocateChannels(30);
 	
@@ -47,6 +30,29 @@ void DestructionSon(void)
 	for (int i = 0; i < NB_MUSIQUES; i++)
 		Mix_FreeMusic(musiques[i]);
 	Mix_CloseAudio();
+}
+
+void ChargerLesMusiques(void)
+{
+	musiques[0] = ChargementMusique("res/musique_intro.ogg");
+	musiques[1] = ChargementMusique("res/musique_menu.ogg");
+	musiques[2] = ChargementMusique("res/musique_en_jeu1.ogg");
+	musiques[3] = ChargementMusique("res/musique_en_jeu2.ogg");
+	musiques[4] = ChargementMusique("res/musique_fin.ogg");
+}
+
+void ChargerLesBruitages(void)
+{
+	bruitages[0] = ChargementBruitages("res/argent0.ogg");
+	bruitages[1] = ChargementBruitages("res/argent1.ogg");
+	bruitages[2] = ChargementBruitages("res/argent2.ogg");
+	bruitages[3] = ChargementBruitages("res/argent3.ogg");
+	bruitages[4] = ChargementBruitages("res/argent4.ogg");
+	bruitages[5] = ChargementBruitages("res/caisse.ogg");
+	bruitages[6] = ChargementBruitages("res/bulle.ogg");
+	bruitages[7] = ChargementBruitages("res/frottement1.ogg");
+	bruitages[8] = ChargementBruitages("res/frottement2.ogg");
+	bruitages[9] = ChargementBruitages("res/cloche.ogg");
 }
 
 Mix_Music *ChargementMusique(const char *lien)

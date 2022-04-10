@@ -21,6 +21,13 @@ void limit_fps(void);
 void InitialisationAffichage(void);
 void AfficherLeRendu(void);
 void DestructionAffichage(void);
+void AfficherChargement(Partie *partie);
+void ChargerLesImages(void);
+void ChargerLesIcones(void);
+void ChargerLesTuiles(void);
+void ChargerImage(char *l, int i);
+void ChargerIcone(char *l, int i);
+void ChargerTuile(char *l, int i);
 
 //------------Affichage de l'unite de base------------------------------
 
@@ -29,6 +36,7 @@ void AfficherAchat(int x, int y, int statut);
 void AfficherTir(int x, int y);
 
 //------------Affichage des terrains------------------------------------
+void ChargerTextes(int l);
 void AfficherLesTerrainsAvecJoueur(const Terrain *t, const Joueur *j);
 void AfficherLesTerrainsSansJoueur(const Terrain *t);
 void AfficherUnTerrain(const Terrain *t);
@@ -41,7 +49,6 @@ void ApparitionDUnDechet(const Terrain *t, const int i, const int j);
 void AfficherJoueur(const Joueur *j);
 
 //------------Affichage des textes--------------------------------------
-void ChargerTextes(int l);
 int VerificationLangage(const char *s);
 SDL_Texture *TextureTexte(char *texte, int i);
 void TextesTraduits(char *l);
@@ -50,18 +57,19 @@ void EcrireTexteProvisoire(char *texte, int X, int Y, int W, int H);
 void AfficherInfosJoueur(Joueur *j);
 void AfficherInfosFee(Joueur *j);
 void AfficherBravo(void);
-void AfficherPause(void);
+void AfficherPause(Partie *p);
 void TextureLangages(void);
 void AfficherLangage(int l);
 void AfficherTitre(void);
 void AfficherMenu(Partie *p);
 void AfficherTexteIntro(int ligne, int x, int y);
 void AfficherDebloque(int ligne, int x, int y);
+void TexteTuto(int ligne);
+void AfficherTuto(Joueur *j);
+void AfficherCredits(void);
+void AfficherPerformances(Joueur *j);
 
 //------------Affichage des images--------------------------------------
-void ChargerImages(char *l, int i);
-void ChargerIcones(char *l, int i);
-void ChargerTuiles(char *l, int i);
 void AfficherFondGris(void);
 void AfficherPetiteFee(int position_x);
 void AfficherPetitGnome(int position_x, int position_y);

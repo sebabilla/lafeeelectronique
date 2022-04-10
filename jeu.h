@@ -10,6 +10,8 @@ void ChoixLangage(Partie *p, Clavier c);
 int ActionsLangage(Partie *partie);
 void ChoixMenu(Partie *p, Clavier c);
 int ActionsMenu(Partie *partie);
+void ChoixPause(Partie *p, Clavier c);
+int ActionPause(Joueur *j, Partie *p);
 
 //------------Gestion terrain-------------------------------------------
 Terrain *NouveauTerrain(void);
@@ -17,6 +19,8 @@ void InitialiserTerrain(Terrain *t, Pays *pays);
 void AjouterTerrainFin(Terrain *t, Pays *pays);
 void LibererTerrain(Terrain *t);
 void DetruireTerrains(Terrain *t);
+void ResetTerrain(Terrain *t);
+void ResetTousLesTerrains(Terrain *t);
 
 //------------Gestion Joueur--------------------------------------------
 Joueur *NouveauJoueur(void);
@@ -24,7 +28,6 @@ void InitialiserJoueur(Joueur *j, Terrain *t);
 int PotentielRecyclage(Terrain *t);
 void LibererJoueur(Joueur *j);
 void ActionJoueur(Joueur *j, Partie *p);
-void ActionPause(Joueur *j, Partie *p);
 void BougerJoueur(Joueur *j, Clavier c);
 void ChangerTerrainActifSuivant(Joueur *j);
 void ChangerTerrainActifPrecedent(Joueur *j);

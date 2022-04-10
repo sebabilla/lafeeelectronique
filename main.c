@@ -36,12 +36,6 @@ int main(int argc, char *argv[])
 	
 	TextureLangages();
 	
-	InitialiserPays(pays);
-	
-	liste_terrains = NouveauTerrain();	
-	
-	joueur = NouveauJoueur();
-	
 //------------Boucle principale adaptée à emcc ou gcc-------------------
 
 	#ifdef __EMSCRIPTEN__
@@ -57,7 +51,7 @@ int main(int argc, char *argv[])
 	if (partie->etat != CHOIX_LANGUE)
 		DetruireTextes();
 		
-	if (partie->etat != CHOIX_LANGUE && partie->etat != INTRODUCTION && partie->etat != MENU_PRINCIPAL)
+	if (partie->etat != CHOIX_LANGUE && partie->etat != INTRODUCTION && partie->etat != MENU_PRINCIPAL && partie->etat != CREDITS)
 		DetruireTerrains(liste_terrains);
 	
 	LibererPartie(partie);
@@ -85,14 +79,41 @@ void BouclePrincipale(void)
 			
 			AfficherLangage(partie->langage);
 			if (ActionsLangage(partie) == 1)
+				partie->etat = CHARGEMENT;
+			break;
+			
+		case CHARGEMENT:
+			AfficherChargement(partie);
+			
+			if (partie->chargement == 0)
+			{			
+				InitialiserPays(pays);			
+				liste_terrains = NouveauTerrain();		
+				joueur = NouveauJoueur();
+			}
+			
+			if (partie->chargement == 1)
+				ChargerLesImages();
+			if (partie->chargement == 2)
+				ChargerLesIcones();
+			if (partie->chargement == 3)
+				ChargerLesTuiles();
+			if (partie->chargement == 4)
+				ChargerLesMusiques();
+			if (partie->chargement == 5)
+				ChargerLesBruitages();
+			if (partie->chargement == 6)
+				ChargerTextes(partie->langage);			
+			if (partie->chargement == 7)
 			{
-				ChargerTextes(partie->langage);
+				partie->chargement = 5;
 				partie->etat = INTRODUCTION;
 				JouerBruitage(9);
 				JouerMusique(0);
 			}
-			break;
 			
+			partie->chargement++;		
+			break;			
 		
 		case INTRODUCTION:
 		
@@ -109,6 +130,7 @@ void BouclePrincipale(void)
 				partie->stade_intro = 0;
 				partie->langage = -1;
 				partie->etat = CHOIX_LANGUE;
+				DetruireTextes();
 				Mix_FadeOutMusic(500);
 			}				
 			break;
@@ -127,6 +149,11 @@ void BouclePrincipale(void)
 				{
 					partie->etat = NOUVELLE_PARTIE;
 					Mix_FadeOutMusic(500);
+					JouerBruitage(9);
+				}
+				if (partie->menu == 2 && partie->debloque > 0)
+				{
+					partie->etat = CREDITS;
 					JouerBruitage(9);
 				}
 			}
@@ -202,11 +229,14 @@ void BouclePrincipale(void)
 			
 			AnimationsJoueur(joueur);
 			
+			AfficherTuto(joueur);
+	
 			if (AnneeFinie(joueur) == 1)
 			{
 				if (joueur->annee == 2031)
 				{
 						partie->etat = FIN_DE_PARTIE;
+						joueur->temps = (SDL_GetTicks() - joueur->temps) / 1000;
 						JouerMusique(4);
 				}
 						
@@ -230,17 +260,26 @@ void BouclePrincipale(void)
 		case FIN_DE_PARTIE:
 			AnimationFindePartie(joueur, partie);
 			
-			if (partie->stade_fin > 2)
+			if (partie->stade_fin > 3)
 			{
+				DetruireTerrains(liste_terrains);
+				LibererJoueur(joueur);
+				liste_terrains = NouveauTerrain();
+				joueur = NouveauJoueur();				
 				partie->stade_fin = 0;
 				partie->etat = MENU_PRINCIPAL;
 				JouerMusique(1);
 			}
 			break;
 			
-		case PAUSE:
+		case CREDITS:
+		
+			if (ActionsMenu(partie) == 1)
+				partie->etat = MENU_PRINCIPAL;
+			AfficherCredits();
+			break;
 			
-			ActionPause(joueur, partie);
+		case PAUSE:
 			
 			AfficherInfosJoueur(joueur);
 			
@@ -248,21 +287,37 @@ void BouclePrincipale(void)
 			
 			AfficherLesTerrainsAvecJoueur(liste_terrains, joueur);
 			
-			AfficherPause();
+			AfficherPause(partie);
 			
-			if (partie->en_pause == 0)
-			{
-				partie->etat = EN_COURS;
-				partie->en_pause = 1;
-				PauseMusique();				
-			}
-			
-			if (partie->en_pause == -1)
-			{
-				partie->etat = MENU_PRINCIPAL;
-				partie->en_pause = 1;
-				JouerMusique(1);				
-			}
+			if (ActionPause(joueur, partie) == 1)
+				switch(partie->menu_pause)
+				{
+					case 0:
+						partie->etat = EN_COURS;
+						PauseMusique();	
+						break;
+					case 1:
+						ResetTousLesTerrains(liste_terrains);
+						joueur->terrain_actif = liste_terrains;
+						joueur->x = -1;
+						joueur->y = 0;
+						joueur->nombre_resets++;
+						partie->etat = EN_COURS;
+						partie->menu_pause = 0;
+						PauseMusique();
+						break;
+					case 2:
+						DetruireTerrains(liste_terrains);
+						LibererJoueur(joueur);
+						liste_terrains = NouveauTerrain();
+						joueur = NouveauJoueur();
+						partie->etat = MENU_PRINCIPAL;
+						PauseMusique();
+						JouerMusique(1);
+						break;
+					default:
+						break;
+				}
 			break;
 		
 		default:

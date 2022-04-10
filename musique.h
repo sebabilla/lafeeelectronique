@@ -7,6 +7,9 @@
 void InitialisationSon(void);
 void DestructionSon(void);
 
+void ChargerLesMusiques(void);
+void ChargerLesBruitages(void);
+
 Mix_Music *ChargementMusique(const char *lien);
 void JouerMusique(int m);
 void PauseMusique(void);

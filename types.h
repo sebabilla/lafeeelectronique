@@ -7,7 +7,7 @@
 #define HAUTEUR_FENETRE 768
 #define FPS 16
 
-#define LIGNES_TEXTE 49
+#define LIGNES_TEXTE 84
 #define NOMBRE_IMAGES 11
 #define NOMBRE_ICONES 7
 #define NOMBRE_TUILES 10
@@ -36,7 +36,7 @@ typedef enum Bouton
 
 typedef enum Etat
 {
-	CHOIX_LANGUE, INTRODUCTION, MENU_PRINCIPAL, NOUVELLE_PARTIE, NOUVELLE_ANNEE, EN_COURS, TRANSITION_FEE, TRANSITION_GNOME, FIN_DE_PARTIE, PAUSE, CREDITS, QUITTER
+	CHARGEMENT, CHOIX_LANGUE, INTRODUCTION, MENU_PRINCIPAL, NOUVELLE_PARTIE, NOUVELLE_ANNEE, EN_COURS, TRANSITION_FEE, TRANSITION_GNOME, FIN_DE_PARTIE, PAUSE, CREDITS, QUITTER
 } Etat;
 
 typedef struct Manette
@@ -49,7 +49,9 @@ typedef struct Partie
 {
 	Etat etat;
 	int langage;
+	int chargement;
 	int menu;
+	int menu_pause;
 	int debloque; // nouvelle difficulté (plus facile)
 	int programme_en_cours;
 	int fee_pose_dechets;
@@ -75,6 +77,7 @@ typedef struct Terrain
 	int statut;
 	int matrice[LARGEUR_TERRAIN][HAUTEUR_TERRAIN];
 	int matrice_dechets[LARGEUR_TERRAIN][HAUTEUR_TERRAIN];
+	int matrice_copie[LARGEUR_TERRAIN][HAUTEUR_TERRAIN];
 	int recyclable;
 	struct Terrain *suivant;
 	struct Terrain *precedent;
@@ -95,6 +98,10 @@ typedef struct Joueur
 	int y;
 	int annee;
 	int temps;
+	int nombre_pas;
+	int nombre_deplacements;
+	int nombre_recyclages;
+	int nombre_resets;
 	AnimationJoueur animation[ANIM_RECYCLER + 
 								ANIM_DEBLOQUE + 
 								ANIM_POUSSER + 

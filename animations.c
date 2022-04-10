@@ -217,6 +217,8 @@ void AnimationFindePartie(Joueur *j, Partie *p)
 			AfficherYeux();
 			
 			break;
+		case 3:
+			AfficherPerformances(j);
 		default:
 			break;
 	}

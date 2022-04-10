@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <SDL.h>
 #include <SDL_mixer.h>
 #include <math.h>
 
@@ -21,7 +22,9 @@ Partie *InitialisationPartie(void)
 	
 	p->etat = CHOIX_LANGUE;
 	p->langage = -1;
+	p->chargement = 0;
 	p->menu = 0;
+	p->menu_pause = 0;
 	p->debloque = 0;
 	p->programme_en_cours = 1;
 	p->fee_pose_dechets = 0;
@@ -54,7 +57,7 @@ int ActionsLangage(Partie *partie)
 {
 	Clavier clavier = EntreeJoueur();
 	
-	if (clavier.bouton == FERMERFENETRE)
+	if (clavier.bouton == FERMERFENETRE || clavier.bouton == ECHAP)
 	{
 		partie->programme_en_cours = 0;
 		return 0;
@@ -100,6 +103,32 @@ int ActionsMenu(Partie *partie)
 	return 0;	
 }
 
+void ChoixPause(Partie *p, Clavier c)
+{
+	if (c.direction == GAUCHE)
+		if (p->menu_pause > 0)
+			p->menu_pause--;
+	
+	if (c.direction == DROITE)
+		if (p->menu_pause < OPTIONS_MENU - 1)
+			p->menu_pause++;
+}
+
+int ActionPause(Joueur *j, Partie *p)
+{
+	Clavier clavier = EntreeJoueur();
+	
+	if (clavier.bouton == FERMERFENETRE)
+		p->programme_en_cours = 0;
+	
+	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
+		return 1;
+		
+	ChoixPause(p, clavier);
+	return 0;
+		
+}
+
 //------------Gestion terrain-------------------------------------------
 Terrain *NouveauTerrain(void)
 {
@@ -118,10 +147,11 @@ void InitialiserTerrain(Terrain *t, Pays *pays)
 	t->statut = 0;
 	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
+		{
 				t->matrice[i][j] = 0;
-	for (int i = 0; i < LARGEUR_TERRAIN; i++)
-		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
-			t->matrice_dechets[i][j] = 0;
+				t->matrice_dechets[i][j] = 0;
+				t->matrice_copie[i][j] = 0;
+		}
 			
 	t->recyclable = 0;
 	
@@ -177,7 +207,11 @@ void InitialiserJoueur(Joueur *j, Terrain *t)
 	j->x = -1;
 	j->y = 0;
 	j->annee = 2021;
-	j->temps = 0;
+	j->temps = SDL_GetTicks();
+	j->nombre_pas = 0;
+	j->nombre_deplacements = 0;
+	j->nombre_recyclages = 0;
+	j->nombre_resets = 0;
 	InitialiserTableauAnimation(j);
 }
 
@@ -222,20 +256,6 @@ void ActionJoueur(Joueur *j, Partie *p)
 	BougerJoueur(j, clavier);
 }
 
-void ActionPause(Joueur *j, Partie *p)
-{
-	Clavier clavier = EntreeJoueur();
-	
-	if (clavier.bouton == FERMERFENETRE)
-		p->programme_en_cours = 0;
-	
-	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
-		p->en_pause = 0;
-		
-	if (clavier.bouton == ECHAP)
-		p->en_pause = -1;
-}
-
 void BougerJoueur(Joueur *j, Clavier c)
 {
 	switch(c.direction)
@@ -244,13 +264,19 @@ void BougerJoueur(Joueur *j, Clavier c)
 			if (j->y < 1 || RencontreDechet(j, c.direction) == 1)
 				return;
 			else
+			{
+				j->nombre_pas++;
 				j->y--;
+			}
 			break;
 		case BAS:
 			if (j->y > HAUTEUR_TERRAIN - 2 || RencontreDechet(j, c.direction) == 1)
 				return;
 			else
+			{
+				j->nombre_pas++;
 				j->y++;
+			}
 			break;
 		case GAUCHE:
 			if (j->x < 0)
@@ -263,7 +289,10 @@ void BougerJoueur(Joueur *j, Clavier c)
 			if (RencontreDechet(j, c.direction) == 1)
 				return;
 			else
+			{
+				j->nombre_pas++;
 				j->x--;
+			}
 			break;
 		case DROITE:
 			if (j->x >= LARGEUR_TERRAIN)
@@ -271,12 +300,18 @@ void BougerJoueur(Joueur *j, Clavier c)
 				if (j->terrain_actif->suivant != NULL)
 					ChangerTerrainActifSuivant(j);
 				else
+				{
+					j->nombre_pas++;
 					j->x++;
+				}
 			}
 			else if (RencontreDechet(j, c.direction) == 1)
 				return;
 			else
+			{
+				j->nombre_pas++;
 				j->x++;
+			}
 			break;
 		default:
 			return;
@@ -417,7 +452,10 @@ void AjouterDechets(Terrain *t)
 	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
 			if (t->matrice_dechets[i][j] > 0)
+			{
 				t->matrice[i][j]++;
+				t->matrice_copie[i][j] = t->matrice[i][j];
+			}
 			
 	t->recyclable = PotentielRecyclage(t);
 }
@@ -427,6 +465,22 @@ void AjouterTousLesDechets(Terrain *t)
 	AjouterDechets(t);
 	if (t->suivant != NULL)
 		AjouterTousLesDechets(t->suivant);
+}
+
+void ResetTerrain(Terrain *t)
+{
+	for (int i = 0; i < LARGEUR_TERRAIN; i++)
+		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
+			t->matrice[i][j] = t->matrice_copie[i][j];
+			
+	t->recyclable = PotentielRecyclage(t);
+}
+
+void ResetTousLesTerrains(Terrain *t)
+{
+	ResetTerrain(t);
+	if (t->suivant != NULL)
+		ResetTousLesTerrains(t->suivant);
 }
 
 //------------Gestion Interaction Joueurs/Dechets-----------------------
@@ -480,6 +534,7 @@ void DetruireDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x][j->y - 1] > 0  &&
 						j->terrain_actif->matrice[j->x][j->y - 1] < 3)
 				{
+					j->nombre_recyclages++;
 					j->terrain_actif->matrice[j->x][j->y - 1]--;
 					j->terrain_actif->recyclable--;
 					AjouterAnimRecyclage(j);
@@ -492,6 +547,7 @@ void DetruireDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x][j->y + 1] > 0 &&
 						j->terrain_actif->matrice[j->x][j->y + 1] < 3)
 				{
+					j->nombre_recyclages++;
 					j->terrain_actif->matrice[j->x][j->y + 1]--;
 					j->terrain_actif->recyclable--;
 					AjouterAnimRecyclage(j);
@@ -504,6 +560,7 @@ void DetruireDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x - 1][j->y] > 0 &&
 						j->terrain_actif->matrice[j->x - 1][j->y] < 3)
 				{
+					j->nombre_recyclages++;
 					j->terrain_actif->matrice[j->x - 1][j->y]--;
 					j->terrain_actif->recyclable--;
 					AjouterAnimRecyclage(j);
@@ -516,6 +573,7 @@ void DetruireDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x + 1][j->y] > 0 &&
 						j->terrain_actif->matrice[j->x + 1][j->y] < 3)
 				{
+					j->nombre_recyclages++;
 					j->terrain_actif->matrice[j->x + 1][j->y]--;
 					j->terrain_actif->recyclable--;
 					AjouterAnimRecyclage(j);
@@ -542,6 +600,7 @@ void PousserDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x][j->y - 1] == 1  &&
 						j->terrain_actif->matrice[j->x][j->y - 2] == 0)
 				{
+					j->nombre_deplacements++;
 					j->terrain_actif->matrice[j->x][j->y - 1]--;
 					j->terrain_actif->matrice[j->x][j->y - 2]++;
 					JouerBruitage(7);
@@ -553,6 +612,7 @@ void PousserDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x][j->y + 1] == 1 &&
 						j->terrain_actif->matrice[j->x][j->y + 2] == 0)
 				{
+					j->nombre_deplacements++;
 					j->terrain_actif->matrice[j->x][j->y + 1]--;
 					j->terrain_actif->matrice[j->x][j->y + 2]++;
 					JouerBruitage(7);
@@ -564,6 +624,7 @@ void PousserDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x - 1][j->y] == 1 &&
 						j->terrain_actif->matrice[j->x - 2][j->y] == 0)
 				{
+					j->nombre_deplacements++;
 					j->terrain_actif->matrice[j->x - 1][j->y]--;
 					j->terrain_actif->matrice[j->x - 2][j->y]++;
 					JouerBruitage(8);
@@ -575,6 +636,7 @@ void PousserDechet(Joueur *j, Direction d)
 				if (j->terrain_actif->matrice[j->x + 1][j->y] == 1 &&
 						j->terrain_actif->matrice[j->x + 2][j->y] == 0)
 				{
+					j->nombre_deplacements++;
 					j->terrain_actif->matrice[j->x + 1][j->y]--;
 					j->terrain_actif->matrice[j->x + 2][j->y]++;
 					JouerBruitage(8);

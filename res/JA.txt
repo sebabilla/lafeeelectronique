@@ -2,7 +2,7 @@ Aissatou au Cameroun
 Melokuhle en Afrique du Sud
 Amelia au Canada
 Mateo au Chili
-Ruòxī en Chine
+Ruòxi en Chine
 Aarav en Inde
 Himari au Japon
 Aleksandar en Bulgarie
@@ -47,12 +47,33 @@ plus puissant, et elle avait oublié sa mission
 première de soutenir les humains.
 Ne relâche pas ton attention, le mal rôde toujours.
 Prépare-toi à affronter le Grand Démon Marketing...
-Tuto: Traverse le champ des achats de matériel électronique de chaque humain de gauche à droite.
-Tuto: Tu peux faire de la place en poussant les achats dans les coins avec Flèche + Entrée.
-Tuto: Tu peux envoyer les achats encombrant au recyclage avec Flèche + Espace.
-Tuto: Facile, non? Ta mission est d'aider les humains pendant 10 années.
-Tuto: Le potentiel de recyclage du matériel électronique varie selon les pays.
-Tuto: Tu commences à voir se profiler le problème?
-Tuto: Tu ne peux pas pousser les tas de matériel rouge ou gris.
-Tuto: Tu peux envoyer le dessus d'un tas de matériel rouge au recyclage.
-Tuto: Courage Gnomette! Les humains ont besoin de toi!
+Traverse le champ des achats de chaque humain de gauche à droite.
+Fais de la place en poussant les appareils avec Flèche + Contrôle Gauche.
+Envoie les appareils électroniques encombrants au recyclage avec Flèche + Espace.
+Facile, non? Ta mission est d'aider les humains pendant 10 années.
+Le potentiel de recyclage du matériel électronique varie selon les pays.
+Tu commences à voir se profiler le problème?
+Tu ne peux pas pousser les tas de matériel rouge ou gris.
+Tu peux envoyer le dessus d'un tas de matériel rouge au recyclage.
+Presse Echap pour faire pause et afficher les options.
+Courage Gnomette! Les humains ont besoin de toi!
+Continuer
+Reset
+Accueil
+La Fée électronique est un jeu développé par Sébastien Abilla
+pendant la Game Jam "Wasted Ressources 2" organisée par Bucket-full-games.
+Le code de la Fée électronique est sous licence GPLv3.
+Sons et visuels sont modifiés d'originaux sous diverses licences libres,
+et redistribués sous les mêmes licences.
+Tout est disponible sur https://github.com/sebabilla/lafeeelectronique.
+Musiques: The Carnival of the Animals par Seatle Youth Symphony Orchestra.
+Effets sonores modifiés de LaSonothèque de Joseph Sardin.
+Personages modifies de clipart de GDJ.
+Icones du Kawai UI Icon Pack de Poenix Dungeon
+Autres images modifiées de Wikimedia.
+Gnomette a rempli sa mission.
+temps:  
+pas: 
+rangements:   
+recyclages:
+resets:

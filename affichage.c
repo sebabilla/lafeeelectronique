@@ -62,7 +62,7 @@ void InitialisationAffichage(void)
 	if (TTF_Init() < 0)
 		SDL_ExitWithError("Initiation TTF");
 		
-	font = TTF_OpenFont("res/OtomanopeeOne-Regular.ttf", 100);
+	font = TTF_OpenFont("res/ZenKakuGothicNew-Medium.ttf", 100);
 	if (!font)
 		SDL_ExitWithError("Chargement de la police");
 		
@@ -70,73 +70,6 @@ void InitialisationAffichage(void)
 	int initialise=IMG_Init(drapeau);
 	if((initialise&drapeau) != drapeau) 
 		SDL_ExitWithError("Initiation SDL_image");
-	
-	ChargerImages("res/petite_fee.png", 0);
-	ChargerImages("res/petit_gnome.png", 1);
-	ChargerImages("res/fee.png", 2);
-	ChargerImages("res/gnome.png", 3);
-	ChargerImages("res/petit_gnome_pousse.png", 4);
-	ChargerImages("res/lan.png", 5);
-	ChargerImages("res/fee_titre.png", 6);
-	ChargerImages("res/fee_finale.png", 7);
-	ChargerImages("res/fee_gnome.png", 8);
-	ChargerImages("res/yeux.png", 9);
-	ChargerImages("res/petit_gnome2.png", 10);
-	
-	ChargerIcones("res/card.png", 0);
-	ChargerIcones("res/batterie.png", 1);
-	ChargerIcones("res/usb.png", 2);
-	ChargerIcones("res/film.png", 3);
-	ChargerIcones("res/light.png", 4);
-	ChargerIcones("res/smartphone.png", 5);
-	ChargerIcones("res/ecran.png", 6);
-	
-	ChargerTuiles("res/terrain_centre.png", 0);
-	ChargerTuiles("res/terrain_bord.png", 1);
-	ChargerTuiles("res/tuile_jaune.png", 2);
-	ChargerTuiles("res/tuile_rouge.png", 3);
-	ChargerTuiles("res/tuile_grise.png", 4);
-	ChargerTuiles("res/assombrir.png", 5);
-	ChargerTuiles("res/fond_gris.png", 6);
-	ChargerTuiles("res/fond_bleu.png", 7);
-	ChargerTuiles("res/pouvoir_recycler.png", 8);
-	ChargerTuiles("res/eclaircir.png", 9);
-}
-
-void ChargerImages(char *l, int i)
-{
-	SDL_Surface *image = NULL;
-	image = IMG_Load(l);
-	textures_images[i] = NULL;
-	if(!image)
-		SDL_ExitWithError("Impossible de charger images");
-	if ((textures_images[i] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
-		SDL_ExitWithError("Impossible de charger images");
-	SDL_FreeSurface(image);
-}
-
-void ChargerIcones(char *l, int i)
-{
-	SDL_Surface *image = NULL;
-	image = IMG_Load(l);
-	textures_icones[i] = NULL;
-	if(!image)
-		SDL_ExitWithError("Impossible de charger icones");
-	if ((textures_icones[i] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
-		SDL_ExitWithError("Impossible de charger icones");
-	SDL_FreeSurface(image);
-}
-
-void ChargerTuiles(char *l, int i)
-{
-	SDL_Surface *image = NULL;
-	image = IMG_Load(l);
-	textures_tuiles[i] = NULL;
-	if(!image)
-		SDL_ExitWithError("Impossible de charger images");
-	if ((textures_tuiles[i] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
-		SDL_ExitWithError("Impossible de charger images");
-	SDL_FreeSurface(image);
 }
 
 void AfficherLeRendu(void)
@@ -175,6 +108,90 @@ void DestructionAffichage(void)
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+}
+
+void AfficherChargement(Partie *partie)
+{
+	char chargement[20];
+	sprintf(chargement, "... %d / 6 ...", partie->chargement);
+	if (stringColor(renderer, 100, 100, chargement, BLANC) < 0)
+		SDL_ExitWithError("Impossible de charger le jeu");
+}
+
+void ChargerLesImages(void)
+{
+	ChargerImage("res/petite_fee.png", 0);
+	ChargerImage("res/petit_gnome.png", 1);
+	ChargerImage("res/fee.png", 2);
+	ChargerImage("res/gnome.png", 3);
+	ChargerImage("res/petit_gnome_pousse.png", 4);
+	ChargerImage("res/lan.png", 5);
+	ChargerImage("res/fee_titre.png", 6);
+	ChargerImage("res/fee_finale.png", 7);
+	ChargerImage("res/fee_gnome.png", 8);
+	ChargerImage("res/yeux.png", 9);
+	ChargerImage("res/petit_gnome2.png", 10);
+}
+
+void ChargerLesIcones(void)
+{
+	ChargerIcone("res/card.png", 0);
+	ChargerIcone("res/batterie.png", 1);
+	ChargerIcone("res/usb.png", 2);
+	ChargerIcone("res/film.png", 3);
+	ChargerIcone("res/light.png", 4);
+	ChargerIcone("res/smartphone.png", 5);
+	ChargerIcone("res/ecran.png", 6);
+}
+
+void ChargerLesTuiles(void)
+{
+	ChargerTuile("res/terrain_centre.png", 0);
+	ChargerTuile("res/terrain_bord.png", 1);
+	ChargerTuile("res/tuile_jaune.png", 2);
+	ChargerTuile("res/tuile_rouge.png", 3);
+	ChargerTuile("res/tuile_grise.png", 4);
+	ChargerTuile("res/assombrir.png", 5);
+	ChargerTuile("res/fond_gris.png", 6);
+	ChargerTuile("res/fond_bleu.png", 7);
+	ChargerTuile("res/pouvoir_recycler.png", 8);
+	ChargerTuile("res/eclaircir.png", 9);
+}
+
+void ChargerImage(char *l, int i)
+{
+	SDL_Surface *image = NULL;
+	image = IMG_Load(l);
+	textures_images[i] = NULL;
+	if(!image)
+		SDL_ExitWithError("Impossible de charger images");
+	if ((textures_images[i] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
+		SDL_ExitWithError("Impossible de charger images");
+	SDL_FreeSurface(image);
+}
+
+void ChargerIcone(char *l, int i)
+{
+	SDL_Surface *image = NULL;
+	image = IMG_Load(l);
+	textures_icones[i] = NULL;
+	if(!image)
+		SDL_ExitWithError("Impossible de charger icones");
+	if ((textures_icones[i] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
+		SDL_ExitWithError("Impossible de charger icones");
+	SDL_FreeSurface(image);
+}
+
+void ChargerTuile(char *l, int i)
+{
+	SDL_Surface *image = NULL;
+	image = IMG_Load(l);
+	textures_tuiles[i] = NULL;
+	if(!image)
+		SDL_ExitWithError("Impossible de charger images");
+	if ((textures_tuiles[i] = SDL_CreateTextureFromSurface(renderer, image)) == NULL)
+		SDL_ExitWithError("Impossible de charger images");
+	SDL_FreeSurface(image);
 }
 
 //------------Affichage de l'unite de base------------------------------
@@ -297,7 +314,7 @@ void InfosTerrainActif(const Terrain *t, const Joueur *j)
 	for (int i = 0; i < t->recyclable; i++)
 
 		AfficherTir((i + 1) * 6 + + long_texte_pays + long_pourcentage,
-					t->pays->y + TUILE * (HAUTEUR_TERRAIN + 0.5));
+					t->pays->y + TUILE * (HAUTEUR_TERRAIN + 0.25));
 }
 
 void ApparitionColonneDechets(const Terrain *t, const int i)
@@ -452,10 +469,54 @@ void AfficherIncorrect(void)
 	SDL_RenderCopy(renderer, texture_textes[1], NULL, &message_rect);
 }
 
-void AfficherPause(void)
+void AfficherPause(Partie *p)
 {
+	SDL_Rect rect = {0, 0, LARGEUR_FENETRE, HAUTEUR_FENETRE};
+	if (SDL_RenderCopy(renderer, textures_tuiles[5], NULL, &rect) != 0)
+		SDL_ExitWithError("Impossible d'afficher la texture");
+	
 	SDL_Rect message_rect = {.x = LARGEUR_FENETRE / 2 - 50, .y = HAUTEUR_FENETRE / 2 - 50, .w = 150, .h = 100};
 	SDL_RenderCopy(renderer, texture_textes[31], NULL, &message_rect);
+
+	int align_gauche = (LARGEUR_FENETRE - 15 * ((longueur_texte[59] + longueur_texte[60] + longueur_texte[61]) / 2 + 6)) / 2;
+	
+	Uint32 couleur[3] = {GRIS, GRIS_FONCE, GRIS_FONCE};
+	if (p->menu_pause == 1)
+	{
+		couleur[0] = GRIS_FONCE; couleur[1] = GRIS;
+	}
+	if (p->menu_pause == 2)
+	{
+		couleur[0] = GRIS_FONCE; couleur[2] = GRIS;
+	}
+	
+	message_rect.y = HAUTEUR_FENETRE / 2 + 100; 
+	message_rect.h = 30;
+	
+	message_rect.x = align_gauche; message_rect.w = longueur_texte[59] / 2 * 15;
+	if (roundedBoxColor(renderer, align_gauche - 15,
+				HAUTEUR_FENETRE / 2 + 100 - 10,
+				align_gauche + longueur_texte[59] / 2 * 15 + 15,
+				HAUTEUR_FENETRE / 2 + 130 + 10, 10, couleur[0]) < 0)
+		SDL_ExitWithError("Impossible de dessiner boite menu");
+	SDL_RenderCopy(renderer, texture_textes[59], NULL, &message_rect);
+	
+	message_rect.x = align_gauche + (longueur_texte[59] / 2 + 3) * 15; message_rect.w = longueur_texte[60] / 2 * 15;
+	if (roundedBoxColor(renderer, align_gauche + (longueur_texte[59] / 2 + 2) * 15,
+				HAUTEUR_FENETRE / 2 + 100 - 10,
+				align_gauche + ((longueur_texte[59] + longueur_texte[60]) / 2 + 3) * 15,
+				HAUTEUR_FENETRE / 2 + 130 + 10, 10, couleur[1]) < 0)
+		SDL_ExitWithError("Impossible de dessiner boite menu");
+	SDL_RenderCopy(renderer, texture_textes[60], NULL, &message_rect);
+	
+	message_rect.x = align_gauche + ((longueur_texte[59] + longueur_texte[60]) / 2 + 5) * 15; message_rect.w = longueur_texte[61] / 2 * 15;
+	if (roundedBoxColor(renderer, align_gauche + ((longueur_texte[59] + longueur_texte[60]) / 2 + 4) * 15,
+				HAUTEUR_FENETRE / 2 + 100 - 10,
+				align_gauche + ((longueur_texte[59] + longueur_texte[60] + longueur_texte[61]) / 2 + 6) * 15,
+				HAUTEUR_FENETRE / 2 + 130 + 10, 10, couleur[2]) < 0)
+		SDL_ExitWithError("Impossible de dessiner boite menu");
+	SDL_RenderCopy(renderer, texture_textes[61], NULL, &message_rect);
+	
 }
 
 void TextureLangages(void)
@@ -574,9 +635,7 @@ void AfficherMenu(Partie *p)
 				HAUTEUR_FENETRE / 2 - TUILE,
 				align_gauche + ((longueur_texte[33] + longueur_texte[34] + longueur_texte[35]) / 2 + 7) * TUILE,
 				HAUTEUR_FENETRE / 2 + 40 + TUILE, TUILE, SOMBRE) < 0)
-			SDL_ExitWithError("Impossible de dessiner boite menu");
-	
-	
+			SDL_ExitWithError("Impossible de dessiner boite menu");	
 }
 
 void AfficherTexteIntro(int ligne, int x, int y)
@@ -595,6 +654,145 @@ void AfficherDebloque(int ligne, int x, int y)
 	SDL_Rect message_rect = {.x = x, .y = y, .w = longueur_texte[ligne] * 8, .h = 25};
 	if (SDL_RenderCopy(renderer, texture_textes[ligne], NULL, &message_rect) < 0)
 		SDL_ExitWithError("Impossible d'écrire message debloque");
+}
+
+void TexteTuto(int ligne)
+{
+	SDL_Rect message_rect = {.x = 250, .y = 15, .w = longueur_texte[ligne] * 8, .h = 25};
+	if (SDL_RenderCopy(renderer, texture_textes[ligne], NULL, &message_rect) < 0)
+		SDL_ExitWithError("Impossible d'écrire message debloque");
+}
+
+void AfficherTuto(Joueur *j)
+{
+	if (j->annee == 2022)
+		switch(j->terrain_actif->pays->numero)
+		{
+			case 0:
+				TexteTuto(49);
+				break;
+			case 1:
+				TexteTuto(50);
+				break;
+			case 2:
+				TexteTuto(51);
+				break;
+			case 3:
+				TexteTuto(52);
+				break;
+			case 4:
+				TexteTuto(53);
+				break;
+			default:
+				break;
+		}
+	else if (j->annee == 2023)
+		switch(j->terrain_actif->pays->numero)
+		{
+			case 0:
+				TexteTuto(54);
+				break;
+			case 1:
+				TexteTuto(55);
+				break;
+			case 2:
+				TexteTuto(56);
+				break;
+			case 3:
+				TexteTuto(57);
+				break;
+			case 4:
+				TexteTuto(58);
+				break;
+			default:
+				break;
+		}
+		
+}
+
+void AfficherCredits(void)
+{
+	SDL_Rect message_rect = {.x = (LARGEUR_FENETRE - longueur_texte[32] * 30) / 2, .y = 50, .w = longueur_texte[32] * 30, .h = 80};
+	if (SDL_RenderCopy(renderer, texture_textes[32], NULL, &message_rect) < 0)
+		SDL_ExitWithError("Impossible d'écrire l'intro");
+	
+	message_rect.x = (LARGEUR_FENETRE - longueur_texte[62] * 9) / 2;
+	message_rect.y = 180;
+	message_rect.w = longueur_texte[62] * 9;
+	message_rect.h = 30;
+	if (SDL_RenderCopy(renderer, texture_textes[62], NULL, &message_rect) < 0)
+		SDL_ExitWithError("Impossible d'écrire message debloque");
+	
+	message_rect.x = (LARGEUR_FENETRE - longueur_texte[63] * 8) / 2;
+		message_rect.y = 220;
+		message_rect.w = longueur_texte[63] * 8;
+		message_rect.h = 25;
+		if (SDL_RenderCopy(renderer, texture_textes[63], NULL, &message_rect) < 0)
+			SDL_ExitWithError("Impossible d'écrire message debloque");
+	
+	for (int i = 0; i < 5; i++)
+	{
+		message_rect.x = (LARGEUR_FENETRE - longueur_texte[64 + i] * 8) / 2;
+		message_rect.y = 270 + i * 30;
+		message_rect.w = longueur_texte[64 + i] * 8;
+		message_rect.h = 25;
+		if (SDL_RenderCopy(renderer, texture_textes[64 + i], NULL, &message_rect) < 0)
+			SDL_ExitWithError("Impossible d'écrire message debloque");
+	}
+	
+	for (int i = 0; i < 4; i++)
+	{
+		message_rect.x = (LARGEUR_FENETRE - longueur_texte[69 + i] * 8) / 2;
+		message_rect.y = 440 + i * 30;
+		message_rect.w = longueur_texte[69 + i] * 8;
+		message_rect.h = 25;
+		if (SDL_RenderCopy(renderer, texture_textes[69 + i], NULL, &message_rect) < 0)
+			SDL_ExitWithError("Impossible d'écrire message debloque");
+	}
+	
+	for (int i = 0; i < 5; i++)
+	{
+		message_rect.x = (LARGEUR_FENETRE - longueur_texte[73 + i] * 8) / 2;
+		message_rect.y = 580 + i * 30;
+		message_rect.w = longueur_texte[73 + i] * 8;
+		message_rect.h = 25;
+		if (SDL_RenderCopy(renderer, texture_textes[73 + i], NULL, &message_rect) < 0)
+			SDL_ExitWithError("Impossible d'écrire message debloque");
+	}
+}
+
+void AfficherPerformances(Joueur *j)
+{
+	SDL_Rect message_rect = {(LARGEUR_FENETRE - longueur_texte[78] * 9) / 2,
+						200, longueur_texte[78] * 9, 30};
+	if (SDL_RenderCopy(renderer, texture_textes[78], NULL, &message_rect) < 0)
+		SDL_ExitWithError("Impossible d'écrire message debloque");
+	
+	char temps[20];
+	sprintf(temps, "%02dh %02dm %02ds", j->temps / 3600, j->temps % 3600 / 60, j->temps % 3600 % 60);
+	EcrireTexteProvisoire(temps, LARGEUR_FENETRE / 2, 300, 11 * 8, 25);
+	char pas[20];
+	sprintf(pas, "%06d", j->nombre_pas);
+	EcrireTexteProvisoire(pas, LARGEUR_FENETRE / 2, 330, 6 * 8, 25);
+	char deplacements[20];
+	sprintf(deplacements, "%05d", j->nombre_deplacements);
+	EcrireTexteProvisoire(deplacements, LARGEUR_FENETRE / 2, 360, 5 * 8, 25);
+	char recyclages[20];
+	sprintf(recyclages, "%04d", j->nombre_recyclages);
+	EcrireTexteProvisoire(recyclages, LARGEUR_FENETRE / 2, 390, 4 * 8, 25);
+	char resets[20];
+	sprintf(resets, "%03d", j->nombre_resets);
+	EcrireTexteProvisoire(resets, LARGEUR_FENETRE / 2, 420, 3 * 8, 25);
+	
+	message_rect.h = 25;
+	for (int i = 0; i < 5; i++)
+	{		
+		message_rect.x = LARGEUR_FENETRE / 2 - longueur_texte[79 + i] * 8;
+		message_rect.y = 300 + i * 30;
+		message_rect.w = longueur_texte[79 + i] * 8;
+		if (SDL_RenderCopy(renderer, texture_textes[79 + i], NULL, &message_rect) < 0)
+			SDL_ExitWithError("Impossible d'écrire message debloque");
+	}		
 }
 
 //------------Affichage des images--------------------------------------
