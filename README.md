@@ -8,13 +8,13 @@ distribué sous licence [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) (
 
 Aide les humains à organiser leur consommation de produits électroniques pendant 10 ans en évitant d'être noyer sous les encombrants.
 
-### Code Source
+### Code source
 
 [GitHub](https://github.com/sebabilla/lafeeelectronique)
 
-### Vidéo
+### Aperçu vidéo
 
-TODO
+[YouTube](https://youtu.be/T08urJjkGF0)
 
 ### Jouer en ligne:
 
@@ -48,7 +48,8 @@ gcc *.c -Wall -o fee -lm $(sdl2-config --cflags --libs) -lSDL2_gfx -lSDL2_ttf -l
 
 ##### Développement
 
-Développement; [code](https://github.com/sebabilla/lafeeelectronique); illustrations des terrains et cartes d'actions; texte original en Français, traductions en Anglais et Japonais par Sébastien Abilla ([GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html))
+Développement; [code](https://github.com/sebabilla/lafeeelectronique); illustrations des terrains et cartes d'action; texte original en Français, traductions en Anglais et Japonais par Sébastien Abilla ([GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html))  
+Les autres assets listés ci-dessous sont redistribués sous les mêmes licences libres que les originaux à partir desquels ils sont modifés.
 
 ##### Musiques
 
@@ -76,8 +77,6 @@ Mix et modifications d'0penCliparts de [GDJ](https://openclipart.org/artist/GDJ)
 
 Modifiée d'une photo de LAN par [Toffelginkgo](https://commons.wikimedia.org/wiki/File:Winter_2004_DreamHack_LAN_Party.jpg) ([CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/))
 
-#####Fonts
+##### Fonts
 
 M+ 2p heavy by [M+ FONTS PROJECT](https://mplusfonts.github.io/) ([SIL OFL](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL))
-
-emcc *c -O2 -s USE_SDL=2 -s USE_SDL_TTF=2 --preload-file res/ -s USE_SDL_GFX=2 -s USE_SDL_MIXER=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' -s ALLOW_MEMORY_GROWTH -o fee.html

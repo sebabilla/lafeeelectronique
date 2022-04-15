@@ -30,7 +30,7 @@ Clavier EntreeJoueur(void)
 			c.direction = DROITE;
 		if (state[SDL_SCANCODE_ESCAPE])
 			c.bouton = ECHAP;
-		else if (state[SDL_SCANCODE_RETURN] || state[SDL_SCANCODE_LCTRL])
+		else if (state[SDL_SCANCODE_RETURN] || state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_LGUI])
 			c.bouton = ENTREE;
 		else if (state[SDL_SCANCODE_SPACE])
 			c.bouton = ESPACE;

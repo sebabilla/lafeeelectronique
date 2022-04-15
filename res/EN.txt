@@ -11,8 +11,8 @@ Ed in Australia
 The Electronic Fairy is almighty.
 Almost everyone in the world has 
 fallen under her spell.
-Under the fairy's control, they consume,
-over and over again.
+Under the fairy's control, people 
+consume, over and over again.
 You are Gnomette and your heart is always full of hope.
 Your mission is to help ten inhabitants of this planet 
 to find their way through 
@@ -48,14 +48,14 @@ her original mission to sustain the humans.
 But keep your eyes open, evil still lurks.
 Get ready to face the Great Marketing Demon!
 Cross the purchase field of each human from left to right.
-Send bulky electronics for recycling with ARROW + SPACE.
-Make room by pushing the devices with ARROW + LEFT CONTROL.
-Easy, isn't it? Your mission is to assist humans for 10 years.
-The recycling potential of electronic devices varies from country to country.
-You can't push heaps of red or grey devices.
-You can send the top of a heap of red stuff to recycling.
-Can you see the problem looming?
-Press ESCAPE to display the options and the action cards.
+ARROW + SPACE: send for recycling; ARROW + LEFT CTRL: push the devices (or left ⌘)
+The recycling potential of electronic devices (%) varies from country to country.
+Your ammunition is recalculated every year according to the national recycling %.
+Your mission is to assist humans for 10 years without being blocked by a heap of devices.
+ESCAPE: display the options, you can RESET the current year.
+You can fire to get ride of red heaps; you can't push heaps of red or grey devices.
+When you want to use RESET, it may already be too late. Take great care of your humans.
+And watch out for Ed, the compulsive Australian buyer, his country recycle little electronics.
 Be brave Gnomette! The humans need you!
 Continue
 Reset

@@ -621,7 +621,7 @@ void TexteTuto(int ligne)
 	if (partie.langage == 3)
 		caractere = 6;
 	
-	SDL_Rect message_rect = {.x = 250, .y = 15, .w = longueur_texte[ligne] * caractere, .h = 25};
+	SDL_Rect message_rect = {.x = 230, .y = 15, .w = longueur_texte[ligne] * caractere, .h = 25};
 	if (SDL_RenderCopy(renderer, texture_textes[ligne], NULL, &message_rect) < 0)
 		SDL_ExitWithError("Impossible d'écrire message debloque");
 }
