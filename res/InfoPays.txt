@@ -1,10 +1,10 @@
-Cameroon 0 1 1
-SouthAfrica 1 7 4
-Canada 2 20 13
-Chile 3 10 3
-China 4 7 15
-India 5 2 1
-Japan 6 20 22
-Bulgaria 7 12 66
-France 8 21 54
-Austalia 9 22 10
+Chile 0 10 3 -4
+Canada 1 20 13 -4
+Cameroon 2 1 1 1
+SouthAfrica 3 7 4 2
+France 4 21 54 2
+Bulgaria 5 12 66 3
+India 6 2 1 6
+China 7 7 15 8 
+Japan 8 20 22 9
+Australia 9 22 10 10

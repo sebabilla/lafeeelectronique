@@ -7,29 +7,29 @@
 #include "musique.h"
 #include "animations.h"
 
-void AnimationIntroduction(Partie *partie)
+void AnimationIntroduction(void)
 {
 	Clavier clavier = EntreeJoueur();
 	if (clavier.bouton == FERMERFENETRE)
 	{
-		partie->programme_en_cours = 0;
+		partie.programme_en_cours = 0;
 		return ;
 	}
 		
 	if (clavier.bouton == ECHAP)
 	{
-		partie->stade_intro = -1;
+		partie.stade_intro = -1;
 		return;
 	}
 	
 	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
-		partie->stade_intro++;
+		partie.stade_intro++;
 	
 	AfficherLan();
 	
 	int compteur_animation = SDL_GetTicks();
 			
-	switch(partie->stade_intro)
+	switch(partie.stade_intro)
 	{
 		case 0:
 			for (int i = 0; i < 5; i++)
@@ -72,125 +72,121 @@ void AnimationIntroduction(Partie *partie)
 	}
 }
 
-void AnimationFeeNouvelleAnnee1(Partie *partie, Joueur *joueur, Terrain *terrain)
+void AnimationFeeNouvelleAnnee1(Terrain *terrain)
 {
 	Clavier clavier = EntreeJoueur();
 	if (clavier.bouton == FERMERFENETRE)
 	{
-		partie->programme_en_cours = 0;
+		partie.programme_en_cours = 0;
 		return;
 	}
 	
 	
-	AfficherInfosFee(joueur);
+	AfficherAnnee(1);
 	
 	AfficherLesTerrainsSansJoueur(terrain);
 	
-	int ralentir_animation = partie->fee_pose_dechets / 15;
+	int ralentir_animation = partie.fee_pose_dechets / 15;
 
 	AfficherPetiteFee(ralentir_animation);
 	
-	if (partie->fee_pose_dechets % 15 == 0)
+	if (partie.fee_pose_dechets % 15 == 0)
 		JouerDechets(terrain, ralentir_animation);
 
 	ApparitionColonneDechets(terrain, ralentir_animation);
 }
 
-void AnimationFeeNouvelleAnnee2(Partie *partie, Joueur *joueur, Terrain *terrain)
+void AnimationFeeNouvelleAnnee2(Terrain *terrain)
 {
-	AfficherInfosFee(joueur);
+	AfficherAnnee(1);
 
 	AfficherPetiteFee(LARGEUR_TERRAIN);
 	
 	AfficherLesTerrainsSansJoueur(terrain);
 }
 
-void InitialiserTableauAnimation(Joueur *j)
+void AnimationsJoueur(void)
 {
-	for (int i = 0; i < ANIM_RECYCLER + ANIM_DEBLOQUE + ANIM_POUSSER + ANIM_NIV_FINI; i++)
+	if (joueur.animation[ANIM_RECYCLER].temps == 0 && // = ANIM_DEBLOQUE - 1
+		joueur.animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps == 0) //  = ANIM_POUSSER - 1
+		AfficherPetitGnome(joueur.x + 8 * TUILE, joueur.y);
+	else if (joueur.animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps != 0)
 		{
-			j->animation[i].x = 0;
-			j->animation[i].y = 0;
-			j->animation[i].temps = 0;
-		}
-}
-
-void AnimationsJoueur(Joueur *j)
-{
-	if (j->animation[ANIM_RECYCLER].temps == 0 && // = ANIM_DEBLOQUE - 1
-		j->animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps == 0) //  = ANIM_POUSSER - 1
-		AfficherPetitGnome(j->x, j->y);
-	else if (j->animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps != 0)
-		{
-			AfficherPousser(j->x, j->y);
-			j->animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps--;
+			AfficherPousser(joueur.x + 8 * TUILE, joueur.y);
+			joueur.animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps--;
 		}
 
 	for (int i = 0; i < ANIM_RECYCLER; i++)
-		if (j->animation[i].temps != 0)
+		if (joueur.animation[i].temps != 0)
 			{
-				AfficherTir(j->animation[i].x + 8 * TUILE, j->animation[i].y);
-				j->animation[i].temps--;
-				j->animation[i].x += 3;
+				AfficherTir(joueur.animation[i].x + 8 * TUILE, joueur.animation[i].y);
+				joueur.animation[i].temps--;
+				joueur.animation[i].x += 3;
 			}
 }
 
-void AjouterAnimRecyclage(Joueur *j)
+void AjouterAnimRecyclage(void)
 {
 	for (int i = 0; i < ANIM_RECYCLER; i++)
-		if (j->animation[i].temps == 0)
+		if (joueur.animation[i].temps == 0)
 			{
-				j->animation[i].temps = 20;
-				j->animation[i].x = j->x + 2 * TUILE;
-				j->animation[i].y = j->y + TUILE;
+				joueur.animation[i].temps = 20;
+				joueur.animation[i].x = joueur.x + 2 * TUILE;
+				joueur.animation[i].y = joueur.y + TUILE;
 				return;
 			}
 }
 
-void AnimationPousser(Joueur *j)
+void AnimationPousser(void)
 {
-	j->animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps = 20;
+	joueur.animation[ANIM_RECYCLER + ANIM_DEBLOQUE].temps = 20;
 }
 
-void AnimationDebloques(Joueur *j)
+void AnimationDebloques(void)
 {
-	if (j->animation[ANIM_RECYCLER].temps < 1)
+	if (joueur.animation[ANIM_RECYCLER].temps < 1)
 		return;
-	j->animation[ANIM_RECYCLER].temps--; // position de ANIM_DEBLOQUE
-	j->animation[ANIM_RECYCLER].x++;
+	joueur.animation[ANIM_RECYCLER].temps--; // position de ANIM_DEBLOQUE
+	joueur.animation[ANIM_RECYCLER].x++;
 	
-	AfficherPetitGnome(LARGEUR_FENETRE - j->animation[ANIM_RECYCLER].x - 12 * TUILE, j->animation[ANIM_RECYCLER].y);
+	AfficherPetitGnome(LARGEUR_FENETRE - joueur.animation[ANIM_RECYCLER].x - 12 * TUILE, joueur.animation[ANIM_RECYCLER].y);
 	
 	int ligne = 36;
-	if (j->annee == 2027)
+	if (joueur.annee == 2025)
+		ligne = 90;
+	if (joueur.annee == 2027)
 		ligne = 37;
-	if (j->annee == 2030)
+	if (joueur.annee == 2028)
+		ligne = 91;
+	if (joueur.annee == 2030)
 		ligne = 38;
 		
-	AfficherDebloque(ligne, LARGEUR_FENETRE - j->animation[ANIM_RECYCLER].x - 15 * TUILE, j->animation[ANIM_RECYCLER].y - 2 * TUILE);	
+	AfficherDebloque(ligne, LARGEUR_FENETRE - joueur.animation[ANIM_RECYCLER].x - 15 * TUILE, joueur.animation[ANIM_RECYCLER].y - 2 * TUILE);	
 }
 
-void AnimationFindePartie(Joueur *j, Partie *p)
+void AnimationFindePartie(Terrain *terrain)
 {
 	Clavier clavier = EntreeJoueur();
 	if (clavier.bouton == FERMERFENETRE)
 	{
-		p->programme_en_cours = 0;
+		partie.programme_en_cours = 0;
 		return ;
 	}
 	
 	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE || clavier.bouton == ECHAP)
 	{	
-		p->stade_fin++;
-		if (p->stade_fin == 2)
+		partie.stade_fin++;
+		if (partie.stade_fin == 2)
 			JouerMusique(0);
 	}	
 	
 	AfficherLan();
 	
 	int compteur_animation = SDL_GetTicks();
+	
+	int alignement;
 			
-	switch(p->stade_fin)
+	switch(partie.stade_fin)
 	{
 		case 0:
 			for (int i = 0; i < 4; i++)
@@ -211,14 +207,19 @@ void AnimationFindePartie(Joueur *j, Partie *p)
 				AfficherFeeGnome(LARGEUR_FENETRE - 470 - compteur_animation / 50 % 30, HAUTEUR_FENETRE - 500);
 			break;
 		case 2:
+			alignement = 300;
+			if (partie.langage == 2)
+				alignement = 250;
+			else if (partie.langage == 3)
+				alignement = 180;
 			for (int i = 0; i < 2; i++)
-				AfficherTexteIntro(47 + i, 250, 50 + i * 50);
+				AfficherTexteIntro(47 + i, alignement, 50 + i * 50);
 			
 			AfficherYeux();
 			
 			break;
 		case 3:
-			AfficherPerformances(j);
+			AfficherPerformances(terrain);
 		default:
 			break;
 	}

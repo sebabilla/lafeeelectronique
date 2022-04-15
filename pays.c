@@ -39,9 +39,9 @@ Pays LirePays(int indice)
 	for (int i = 0; i < NOMBRE_PAYS; i++)
 	{
 		if (i == indice)
-			fscanf(fichier, "%s %d %d %d", p.nom, &p.numero, &p.dechets_electroniques, &p.ratio_lineaire);
+			fscanf(fichier, "%s %d %d %d %d", p.nom, &p.numero, &p.dechets_electroniques, &p.ratio_lineaire, &p.variation_gmt);
 		else
-			fscanf(fichier, "%s %d %d %d", trash.nom, &trash.numero, &trash.dechets_electroniques, &trash.ratio_lineaire);
+			fscanf(fichier, "%s %d %d %d %d", trash.nom, &trash.numero, &trash.dechets_electroniques, &trash.ratio_lineaire, &trash.variation_gmt);
 	}		
 	fclose(fichier);
 	

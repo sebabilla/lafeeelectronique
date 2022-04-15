@@ -11,122 +11,85 @@
 
 
 //------------Initialisation et rechargement----------------------------
-Partie *InitialisationPartie(void)
+Partie InitialisationPartie(void)
 {
-	Partie *p = malloc(sizeof(Partie));
-	if (p == NULL)
-	{
-		printf("Erreur d'allocation mémoire");
-		exit(EXIT_FAILURE);
-	}
-	
-	p->etat = CHOIX_LANGUE;
-	p->langage = -1;
-	p->chargement = 0;
-	p->menu = 0;
-	p->menu_pause = 0;
-	p->debloque = 0;
-	p->programme_en_cours = 1;
-	p->fee_pose_dechets = 0;
-	p->en_cours = 1;
-	p->en_pause = 1;
-	p->stade_intro = 0;
-	p->stade_fin = 0;
+	Partie p = {	
+				.etat = CHOIX_LANGUE,
+				.langage = -1,
+				.chargement = 0,
+				.menu = {0, 0, 0},
+				.menu_niveau = 0,
+				.debloque = {1, 0, 0},
+				.programme_en_cours = 1,
+				.fee_pose_dechets = 0,
+				.en_cours = 1,
+				.en_pause = 1,
+				.stade_intro = 0,
+				.stade_fin = 0
+				};
 	
 	return p;
 }
 
-void LibererPartie(Partie *p)
-{
-	free(p);
-	p = NULL;
-}
-
-void ChoixLangage(Partie *p, Clavier c)
+void ChoixLangage(Clavier c)
 {
 	if (c.direction == BAS)
-		if (p->langage > -NOMBRE_LANGAGES)
-			p->langage--;
+		if (partie.langage > -NOMBRE_LANGAGES)
+			partie.langage--;
 	
 	if (c.direction == HAUT)
-		if (p->langage < -1)
-			p->langage++;
+		if (partie.langage < -1)
+			partie.langage++;
 }
 
-int ActionsLangage(Partie *partie)
+int ActionsLangage(void)
 {
 	Clavier clavier = EntreeJoueur();
 	
 	if (clavier.bouton == FERMERFENETRE || clavier.bouton == ECHAP)
 	{
-		partie->programme_en_cours = 0;
+		partie.programme_en_cours = 0;
 		return 0;
 	}
 	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
 	{
-		partie->langage *= -1;
+		partie.langage *= -1;
 		return 1;
 	}
 		
-	ChoixLangage(partie, clavier);
+	ChoixLangage(clavier);
 	return 0;	
 }
 
-void ChoixMenu(Partie *p, Clavier c)
+void ChoixMenu(Clavier c, int index_menu, int nombre_de_choix)
 {
-	if (c.direction == GAUCHE)
-		if (p->menu > 0)
-			p->menu--;
+	if (c.direction == HAUT)
+		if (partie.menu[index_menu] > 0)
+			partie.menu[index_menu]--;
 	
-	if (c.direction == DROITE)
-		if (p->menu < OPTIONS_MENU - 1)
-			p->menu++;
+	if (c.direction == BAS)
+		if (partie.menu[index_menu] < nombre_de_choix - 1)
+			partie.menu[index_menu]++;
 }
 
-int ActionsMenu(Partie *partie)
+int ActionsMenu(int index_menu, int nombre_de_choix)
 {
 	Clavier clavier = EntreeJoueur();
 	
 	if (clavier.bouton == FERMERFENETRE)
 	{
-		partie->programme_en_cours = 0;
+		partie.programme_en_cours = 0;
 		return 0;
 	}
 	if (clavier.bouton == ECHAP)
 		return -1;
 	
 	
-	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
+	if (clavier.bouton == ENTREE)
 		return 1;
 		
-	ChoixMenu(partie, clavier);
+	ChoixMenu(clavier, index_menu, nombre_de_choix);
 	return 0;	
-}
-
-void ChoixPause(Partie *p, Clavier c)
-{
-	if (c.direction == GAUCHE)
-		if (p->menu_pause > 0)
-			p->menu_pause--;
-	
-	if (c.direction == DROITE)
-		if (p->menu_pause < OPTIONS_MENU - 1)
-			p->menu_pause++;
-}
-
-int ActionPause(Joueur *j, Partie *p)
-{
-	Clavier clavier = EntreeJoueur();
-	
-	if (clavier.bouton == FERMERFENETRE)
-		p->programme_en_cours = 0;
-	
-	if (clavier.bouton == ENTREE || clavier.bouton == ESPACE)
-		return 1;
-		
-	ChoixPause(p, clavier);
-	return 0;
-		
 }
 
 //------------Gestion terrain-------------------------------------------
@@ -188,129 +151,185 @@ void DetruireTerrains(Terrain *t)
 	LibererTerrain(t);
 }
 
-//------------Gestion Joueur-------------------------------------------
-Joueur *NouveauJoueur(void)
-{
-	Joueur *j = malloc(sizeof(Joueur));
-	if (j == NULL)
-	{
-		printf("Erreur d'allocation mémoire");
-		exit(EXIT_FAILURE);
-	}
-	return j;
-}
-
-void InitialiserJoueur(Joueur *j, Terrain *t)
-{
-	j->terrain_actif = t;
-	j->recyclage = PotentielRecyclage(t);
-	j->x = -1;
-	j->y = 0;
-	j->annee = 2021;
-	j->temps = SDL_GetTicks();
-	j->nombre_pas = 0;
-	j->nombre_deplacements = 0;
-	j->nombre_recyclages = 0;
-	j->nombre_resets = 0;
-	InitialiserTableauAnimation(j);
-}
-
 int PotentielRecyclage(Terrain *t)
-{
+{	
 	int compteur = 0;
 	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
-			compteur += t->matrice[i][j];;
-	float potentiel = (float)t->pays->ratio_lineaire * compteur / 100;
+			compteur += t->matrice[i][j];
+	float potentiel = ((float)t->pays->ratio_lineaire + joueur.bonus) * compteur / 100;
 	if (potentiel < 1 && rand() % 3 == 0)
 		potentiel = ceil(potentiel);
 	
 	return potentiel;
 }
 
-void LibererJoueur(Joueur *j)
+void EchangerAppareils(Terrain *t)
 {
-	free(j);
-	j = NULL;
+	int compteur_dechets = 0;
+	
+	for (int i = 0; i < LARGEUR_TERRAIN; i++)
+		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
+			compteur_dechets += joueur.terrain_actif->matrice[i][j];
+			
+	compteur_dechets /= 3;
+	
+	ViderUntiers(compteur_dechets);
+	
+	Terrain *pointeur_cameroun = TrouverPays(t, 2);
+	
+	AjouterATerrainSpecifique(pointeur_cameroun, compteur_dechets);		
 }
 
-void ActionJoueur(Joueur *j, Partie *p)
+int ViderUntiers(int compteur_dechets)
+{	
+	for (int limite = 0; limite < 1000; limite++)
+		for (int i = 0; i < LARGEUR_TERRAIN; i++)
+			for (int j = 0; j < HAUTEUR_TERRAIN; j++)
+			{
+				if (joueur.terrain_actif->matrice[i][j] > 0)
+					if (rand() % 100 == 0)
+							{
+								joueur.terrain_actif->matrice[i][j]--;
+								compteur_dechets--;
+							}
+				if (compteur_dechets <= 0)
+					return 1;
+			}
+	return 0;
+}
+
+Terrain *TrouverPays(Terrain *t, int numero_pays)
+{
+	if (t->pays->numero == numero_pays)
+		return t;
+		
+	return TrouverPays(t->suivant, numero_pays);
+}
+
+int AjouterATerrainSpecifique(Terrain *t, int compteur_dechets)
+{
+	for (int limite = 0; limite < 1000; limite++)
+		for (int i = 0; i < LARGEUR_TERRAIN; i++)
+			for (int j = 0; j < HAUTEUR_TERRAIN; j++)
+			{
+				if (t->matrice[i][j] == 0)
+					if (rand() % 100 == 0)
+					{
+						t->matrice[i][j]++;
+						compteur_dechets--;
+					}
+				if (compteur_dechets <= 0)
+					return 1;
+			}
+
+	return 0;
+}
+
+//------------Gestion Joueur-------------------------------------------
+Joueur InitialiserJoueur(Terrain *t)
+{
+	Joueur j = {
+				.terrain_actif = t,
+				.x = -1,
+				.y = 0,
+				.bonus = 0,
+				.annee = 2021,
+				.temps = SDL_GetTicks(),
+				.nombre_pas = 0,
+				.nombre_deplacements = 0,
+				.nombre_recyclages = 0,
+				.nombre_resets = 0,
+				.pouvoir = {1, 1, 1, 0, 0} // 3 et 4 sont debloques en jeu
+				};
+				
+	for (int i = 0; i < ANIM_RECYCLER + ANIM_DEBLOQUE + ANIM_POUSSER + ANIM_NIV_FINI; i++)
+	{
+		joueur.animation[i].x = 0;
+		joueur.animation[i].y = 0;
+		joueur.animation[i].temps = 0;
+	}
+	
+	return j;	
+}
+
+void ActionJoueur(void)
 {
 	Clavier clavier = EntreeJoueur();
 	
 	if (clavier.bouton == FERMERFENETRE)
-		p->programme_en_cours = 0;
+		partie.programme_en_cours = 0;
 	
 	if (clavier.bouton == ECHAP)
-		p->en_cours = 0;
+		partie.en_cours = 0;
 		
 	if (clavier.bouton == ESPACE && 
 			clavier.direction != RIEN 
-			&& j->terrain_actif->recyclable > 0)
-		DetruireDechet(j, clavier.direction);
+			&& joueur.terrain_actif->recyclable > 0)
+		DetruireDechet(clavier.direction);
 		
 	if (clavier.bouton == ENTREE && 
 			clavier.direction != RIEN)
-		PousserDechet(j, clavier.direction);
+		PousserDechet(clavier.direction);
 	
-	BougerJoueur(j, clavier);
+	BougerJoueur(clavier);
 }
 
-void BougerJoueur(Joueur *j, Clavier c)
+void BougerJoueur(Clavier c)
 {
 	switch(c.direction)
 	{
 		case HAUT:
-			if (j->y < 1 || RencontreDechet(j, c.direction) == 1)
+			if (joueur.y < 1 || RencontreDechet(c.direction) == 1)
 				return;
 			else
 			{
-				j->nombre_pas++;
-				j->y--;
+				joueur.nombre_pas++;
+				joueur.y--;
 			}
 			break;
 		case BAS:
-			if (j->y > HAUTEUR_TERRAIN - 2 || RencontreDechet(j, c.direction) == 1)
+			if (joueur.y > HAUTEUR_TERRAIN - 2 || RencontreDechet(c.direction) == 1)
 				return;
 			else
 			{
-				j->nombre_pas++;
-				j->y++;
+				joueur.nombre_pas++;
+				joueur.y++;
 			}
 			break;
 		case GAUCHE:
-			if (j->x < 0)
+			if (joueur.x < 0)
 			{
-				if (j->terrain_actif->precedent != NULL)
-					ChangerTerrainActifPrecedent(j);
+				if (joueur.terrain_actif->precedent != NULL)
+					ChangerTerrainActifPrecedent();
 				else
 					return;
 			}
-			if (RencontreDechet(j, c.direction) == 1)
+			if (RencontreDechet(c.direction) == 1)
 				return;
 			else
 			{
-				j->nombre_pas++;
-				j->x--;
+				joueur.nombre_pas++;
+				joueur.x--;
 			}
 			break;
 		case DROITE:
-			if (j->x >= LARGEUR_TERRAIN)
+			if (joueur.x >= LARGEUR_TERRAIN)
 			{
-				if (j->terrain_actif->suivant != NULL)
-					ChangerTerrainActifSuivant(j);
+				if (joueur.terrain_actif->suivant != NULL)
+					ChangerTerrainActifSuivant();
 				else
 				{
-					j->nombre_pas++;
-					j->x++;
+					joueur.nombre_pas++;
+					joueur.x++;
 				}
 			}
-			else if (RencontreDechet(j, c.direction) == 1)
+			else if (RencontreDechet(c.direction) == 1)
 				return;
 			else
 			{
-				j->nombre_pas++;
-				j->x++;
+				joueur.nombre_pas++;
+				joueur.x++;
 			}
 			break;
 		default:
@@ -318,65 +337,71 @@ void BougerJoueur(Joueur *j, Clavier c)
 	} 
 }
 
-void ChangerTerrainActifSuivant(Joueur *j)
+void ChangerTerrainActifSuivant(void)
 {
-	j->x = -1;
-	j->terrain_actif = j->terrain_actif->suivant;
-	j->recyclage = PotentielRecyclage(j->terrain_actif);
+	joueur.x = -1;
+	joueur.terrain_actif = joueur.terrain_actif->suivant;
 }
 
-void ChangerTerrainActifPrecedent(Joueur *j)
+void ChangerTerrainActifPrecedent(void)
 {
-	j->x = LARGEUR_TERRAIN + 1;
-	j->terrain_actif = j->terrain_actif->precedent;
-	j->recyclage = PotentielRecyclage(j->terrain_actif);
+	joueur.x = LARGEUR_TERRAIN + 1;
+	joueur.terrain_actif = joueur.terrain_actif->precedent;
 }
 
-int AnneeFinie(Joueur *j)
+int AnneeFinie(void)
 {
-	if (j->terrain_actif->suivant == NULL &&
-		j->x >= LARGEUR_TERRAIN + 1)
+	if (joueur.terrain_actif->suivant == NULL &&
+		joueur.x >= LARGEUR_TERRAIN + 1)
 		return 1;
 	return 0;
 }
 
-void NouvelleAnnee(Joueur *j, Partie *p, Terrain *t)
+void NouvelleAnnee(Terrain *t)
 {
-	p->etat = NOUVELLE_ANNEE;
-	j->terrain_actif = t;
-	j->x = -1;
-	j->y = 0;
-	j->annee++;
-	j->recyclage = PotentielRecyclage(j->terrain_actif);
-	
-	
+	partie.etat = NOUVELLE_ANNEE;
+	joueur.terrain_actif = t;
+	joueur.x = -1;
+	joueur.y = 0;
+	joueur.annee++;	
 }
 
-void DebloquerMode(Joueur *j, Partie *p)
+void DebloquerMode(void)
 {
 	int lancer_anim = 0;
 	
-	if (j->annee == 2023 && p->debloque == 0)
+	if (joueur.annee == 2023 && partie.debloque[2] == 0)
 	{
-		p->debloque = 1;
+		partie.debloque[2] = 1;
 		lancer_anim = 1;
 	} 
-	if (j->annee == 2027 && p->debloque == 1)
+	if (joueur.annee == 2025)
 	{
-		p->debloque = 2;
+		joueur.pouvoir[3] = 1;
 		lancer_anim = 1;
 	}
-	if (j->annee == 2030 && p->debloque == 2)
+	
+	if (joueur.annee == 2027 && partie.debloque[1] == 0)
 	{
-		p->debloque = 3;
+		partie.debloque[1] = 1;
+		lancer_anim = 1;
+	}
+	if (joueur.annee == 2028)
+	{
+		joueur.pouvoir[4] = 1;
+		lancer_anim = 1;
+	}
+	
+	if (joueur.annee == 2030)
+	{
 		lancer_anim = 1;
 	}
 	if (lancer_anim == 1)
 	{	
 		JouerBruitage(9);
-		j->animation[ANIM_RECYCLER].temps = 400; // position de ANIM_DEBLOQUE
-		j->animation[ANIM_RECYCLER].x = 2 * TUILE;
-		j->animation[ANIM_RECYCLER].y = HAUTEUR_FENETRE - 3 * TUILE;
+		joueur.animation[ANIM_RECYCLER].temps = 400; // position de ANIM_DEBLOQUE
+		joueur.animation[ANIM_RECYCLER].x = 2 * TUILE;
+		joueur.animation[ANIM_RECYCLER].y = HAUTEUR_FENETRE - 3 * TUILE;
 	}
 }
 
@@ -451,11 +476,11 @@ void AjouterDechets(Terrain *t)
 {
 	for (int i = 0; i < LARGEUR_TERRAIN; i++)
 		for (int j = 0; j < HAUTEUR_TERRAIN; j++)
+		{
 			if (t->matrice_dechets[i][j] > 0)
-			{
 				t->matrice[i][j]++;
-				t->matrice_copie[i][j] = t->matrice[i][j];
-			}
+			t->matrice_copie[i][j] = t->matrice[i][j];
+		}
 			
 	t->recyclable = PotentielRecyclage(t);
 }
@@ -485,35 +510,35 @@ void ResetTousLesTerrains(Terrain *t)
 
 //------------Gestion Interaction Joueurs/Dechets-----------------------
 
-int RencontreDechet(Joueur *j, Direction d)
+int RencontreDechet(Direction d)
 {
-	if (j->x > LARGEUR_TERRAIN) // eviter cas de fin d'année
+	if (joueur.x > LARGEUR_TERRAIN) // eviter cas de fin d'année
 		return 0;
 	
 	switch(d)
 	{
 		case HAUT:
-			if (j->x < 0 || j->x > LARGEUR_TERRAIN - 1)
+			if (joueur.x < 0 || joueur.x > LARGEUR_TERRAIN - 1)
 				return 0;
-			if (j->terrain_actif->matrice[j->x][j->y - 1] > 0)
+			if (joueur.terrain_actif->matrice[joueur.x][joueur.y - 1] > 0)
 				return 1;
 			break;
 		case BAS:
-			if (j->x < 0 || j->x > LARGEUR_TERRAIN - 1)
+			if (joueur.x < 0 || joueur.x > LARGEUR_TERRAIN - 1)
 				return 0;
-			if (j->terrain_actif->matrice[j->x][j->y + 1] > 0)
+			if (joueur.terrain_actif->matrice[joueur.x][joueur.y + 1] > 0)
 				return 1;
 			break;
 		case GAUCHE:
-			if (j->x <= 0)
+			if (joueur.x <= 0)
 				return 0;			
-			if (j->terrain_actif->matrice[j->x - 1][j->y] > 0)
+			if (joueur.terrain_actif->matrice[joueur.x - 1][joueur.y] > 0)
 				return 1;
 			break;
 		case DROITE:
-			if (j->x >= LARGEUR_TERRAIN - 1)
+			if (joueur.x >= LARGEUR_TERRAIN - 1)
 				return 0;
-			if (j->terrain_actif->matrice[j->x + 1][j->y] > 0)
+			if (joueur.terrain_actif->matrice[joueur.x + 1][joueur.y] > 0)
 				return 1;
 			break;
 		default:
@@ -522,61 +547,61 @@ int RencontreDechet(Joueur *j, Direction d)
 	return 0; 
 }
 
-void DetruireDechet(Joueur *j, Direction d)
+void DetruireDechet(Direction d)
 {
-	if (j->x > LARGEUR_TERRAIN) // eviter cas de fin d'année
+	if (joueur.x > LARGEUR_TERRAIN) // eviter cas de fin d'année
 		return;
 	
 	switch(d)
 	{
 		case HAUT:
-			if (j->y > 0)
-				if (j->terrain_actif->matrice[j->x][j->y - 1] > 0  &&
-						j->terrain_actif->matrice[j->x][j->y - 1] < 3)
+			if (joueur.y > 0)
+				if (joueur.terrain_actif->matrice[joueur.x][joueur.y - 1] > 0  &&
+						joueur.terrain_actif->matrice[joueur.x][joueur.y - 1] < 3)
 				{
-					j->nombre_recyclages++;
-					j->terrain_actif->matrice[j->x][j->y - 1]--;
-					j->terrain_actif->recyclable--;
-					AjouterAnimRecyclage(j);
+					joueur.nombre_recyclages++;
+					joueur.terrain_actif->matrice[joueur.x][joueur.y - 1]--;
+					joueur.terrain_actif->recyclable--;
+					AjouterAnimRecyclage();
 					JouerBruitage(6);
 				}
 			return;
 			break;
 		case BAS:
-			if (j->y < HAUTEUR_TERRAIN - 1)
-				if (j->terrain_actif->matrice[j->x][j->y + 1] > 0 &&
-						j->terrain_actif->matrice[j->x][j->y + 1] < 3)
+			if (joueur.y < HAUTEUR_TERRAIN - 1)
+				if (joueur.terrain_actif->matrice[joueur.x][joueur.y + 1] > 0 &&
+						joueur.terrain_actif->matrice[joueur.x][joueur.y + 1] < 3)
 				{
-					j->nombre_recyclages++;
-					j->terrain_actif->matrice[j->x][j->y + 1]--;
-					j->terrain_actif->recyclable--;
-					AjouterAnimRecyclage(j);
+					joueur.nombre_recyclages++;
+					joueur.terrain_actif->matrice[joueur.x][joueur.y + 1]--;
+					joueur.terrain_actif->recyclable--;
+					AjouterAnimRecyclage();
 					JouerBruitage(6);
 				}
 			return;
 			break;
 		case GAUCHE:
-			if (j->x > 0)
-				if (j->terrain_actif->matrice[j->x - 1][j->y] > 0 &&
-						j->terrain_actif->matrice[j->x - 1][j->y] < 3)
+			if (joueur.x > 0)
+				if (joueur.terrain_actif->matrice[joueur.x - 1][joueur.y] > 0 &&
+						joueur.terrain_actif->matrice[joueur.x - 1][joueur.y] < 3)
 				{
-					j->nombre_recyclages++;
-					j->terrain_actif->matrice[j->x - 1][j->y]--;
-					j->terrain_actif->recyclable--;
-					AjouterAnimRecyclage(j);
+					joueur.nombre_recyclages++;
+					joueur.terrain_actif->matrice[joueur.x - 1][joueur.y]--;
+					joueur.terrain_actif->recyclable--;
+					AjouterAnimRecyclage();
 					JouerBruitage(6);
 				}
 			return;
 			break;
 		case DROITE:
-			if (j->x < LARGEUR_TERRAIN - 1)
-				if (j->terrain_actif->matrice[j->x + 1][j->y] > 0 &&
-						j->terrain_actif->matrice[j->x + 1][j->y] < 3)
+			if (joueur.x < LARGEUR_TERRAIN - 1)
+				if (joueur.terrain_actif->matrice[joueur.x + 1][joueur.y] > 0 &&
+						joueur.terrain_actif->matrice[joueur.x + 1][joueur.y] < 3)
 				{
-					j->nombre_recyclages++;
-					j->terrain_actif->matrice[j->x + 1][j->y]--;
-					j->terrain_actif->recyclable--;
-					AjouterAnimRecyclage(j);
+					joueur.nombre_recyclages++;
+					joueur.terrain_actif->matrice[joueur.x + 1][joueur.y]--;
+					joueur.terrain_actif->recyclable--;
+					AjouterAnimRecyclage();
 					JouerBruitage(6);
 				}
 			return;
@@ -587,58 +612,58 @@ void DetruireDechet(Joueur *j, Direction d)
 	return; 
 }
 
-void PousserDechet(Joueur *j, Direction d)
+void PousserDechet(Direction d)
 {
-	if (j->x > LARGEUR_TERRAIN + 1) // eviter cas de fin d'année
+	if (joueur.x > LARGEUR_TERRAIN + 1) // eviter cas de fin d'année
 		return;
 	
-	AnimationPousser(j);
+	AnimationPousser();
 	switch(d)
 	{
 		case HAUT:
-			if (j->y > 1)
-				if (j->terrain_actif->matrice[j->x][j->y - 1] == 1  &&
-						j->terrain_actif->matrice[j->x][j->y - 2] == 0)
+			if (joueur.y > 1)
+				if (joueur.terrain_actif->matrice[joueur.x][joueur.y - 1] == 1  &&
+						joueur.terrain_actif->matrice[joueur.x][joueur.y - 2] == 0)
 				{
-					j->nombre_deplacements++;
-					j->terrain_actif->matrice[j->x][j->y - 1]--;
-					j->terrain_actif->matrice[j->x][j->y - 2]++;
+					joueur.nombre_deplacements++;
+					joueur.terrain_actif->matrice[joueur.x][joueur.y - 1]--;
+					joueur.terrain_actif->matrice[joueur.x][joueur.y - 2]++;
 					JouerBruitage(7);
 				}
 			return;
 			break;
 		case BAS:
-			if (j->y < HAUTEUR_TERRAIN - 2) 
-				if (j->terrain_actif->matrice[j->x][j->y + 1] == 1 &&
-						j->terrain_actif->matrice[j->x][j->y + 2] == 0)
+			if (joueur.y < HAUTEUR_TERRAIN - 2) 
+				if (joueur.terrain_actif->matrice[joueur.x][joueur.y + 1] == 1 &&
+						joueur.terrain_actif->matrice[joueur.x][joueur.y + 2] == 0)
 				{
-					j->nombre_deplacements++;
-					j->terrain_actif->matrice[j->x][j->y + 1]--;
-					j->terrain_actif->matrice[j->x][j->y + 2]++;
+					joueur.nombre_deplacements++;
+					joueur.terrain_actif->matrice[joueur.x][joueur.y + 1]--;
+					joueur.terrain_actif->matrice[joueur.x][joueur.y + 2]++;
 					JouerBruitage(7);
 				}
 			return;
 			break;
 		case GAUCHE:
-			if (j->x > 1)
-				if (j->terrain_actif->matrice[j->x - 1][j->y] == 1 &&
-						j->terrain_actif->matrice[j->x - 2][j->y] == 0)
+			if (joueur.x > 1)
+				if (joueur.terrain_actif->matrice[joueur.x - 1][joueur.y] == 1 &&
+						joueur.terrain_actif->matrice[joueur.x - 2][joueur.y] == 0)
 				{
-					j->nombre_deplacements++;
-					j->terrain_actif->matrice[j->x - 1][j->y]--;
-					j->terrain_actif->matrice[j->x - 2][j->y]++;
+					joueur.nombre_deplacements++;
+					joueur.terrain_actif->matrice[joueur.x - 1][joueur.y]--;
+					joueur.terrain_actif->matrice[joueur.x - 2][joueur.y]++;
 					JouerBruitage(8);
 				}
 			return;
 			break;
 		case DROITE:
-			if (j->x < LARGEUR_TERRAIN - 2)
-				if (j->terrain_actif->matrice[j->x + 1][j->y] == 1 &&
-						j->terrain_actif->matrice[j->x + 2][j->y] == 0)
+			if (joueur.x < LARGEUR_TERRAIN - 2)
+				if (joueur.terrain_actif->matrice[joueur.x + 1][joueur.y] == 1 &&
+						joueur.terrain_actif->matrice[joueur.x + 2][joueur.y] == 0)
 				{
-					j->nombre_deplacements++;
-					j->terrain_actif->matrice[j->x + 1][j->y]--;
-					j->terrain_actif->matrice[j->x + 2][j->y]++;
+					joueur.nombre_deplacements++;
+					joueur.terrain_actif->matrice[joueur.x + 1][joueur.y]--;
+					joueur.terrain_actif->matrice[joueur.x + 2][joueur.y]++;
 					JouerBruitage(8);
 				}
 			return;

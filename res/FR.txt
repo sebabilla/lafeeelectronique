@@ -1,13 +1,13 @@
+Mateo au Chili
+Amelia au Canada
 Aissatou au Cameroun
 Melokuhle en Afrique du Sud
-Amelia au Canada
-Mateo au Chili
-Ruòxi en Chine
-Aarav en Inde
-Himari au Japon
-Aleksandar en Bulgarie
 Louise en France
-Oliver en Australie
+Aleksandar en Bulgarie
+Aarav en Inde
+Meiling en Chine
+Himari au Japon
+Ed en Australie
 La Fée Electronique est toute puissante.
 Presque tous les habitants du monde ont 
 succombé à ses charmes.
@@ -29,7 +29,7 @@ recyclage présentes
 dans leur pays.
 Achète humain, achète!
 Recyclage des e-déchets en
-PAUSE
+OPTIONS
 La Fée Electronique
 Situation actuelle
 Amélioration de 20 %
@@ -45,35 +45,70 @@ La Fée n'a pas toujours été aussi cupide.
 Elle s'était laissée corrompre par un mal bien 
 plus puissant, et elle avait oublié sa mission
 première de soutenir les humains.
-Ne relâche pas ton attention, le mal rôde toujours.
-Prépare-toi à affronter le Grand Démon Marketing...
+Mais ne relâche pas ton attention, le mal rôde toujours.
+Prépare-toi à affronter le Grand Démon Marketing!
 Traverse le champ des achats de chaque humain de gauche à droite.
-Fais de la place en poussant les appareils avec Flèche + Contrôle Gauche.
-Envoie les appareils électroniques encombrants au recyclage avec Flèche + Espace.
+Envoie les appareils électroniques encombrants au recyclage avec FLECHE + ESPACE.
+Fais de la place en poussant les appareils avec FLECHE + CONTROLE GAUCHE.
 Facile, non? Ta mission est d'aider les humains pendant 10 années.
 Le potentiel de recyclage du matériel électronique varie selon les pays.
-Tu commences à voir se profiler le problème?
 Tu ne peux pas pousser les tas de matériel rouge ou gris.
 Tu peux envoyer le dessus d'un tas de matériel rouge au recyclage.
-Presse Echap pour faire pause et afficher les options.
+Tu commences à voir se profiler le problème?
+Presse Echap afficher les options et les cartes d'actions.
 Courage Gnomette! Les humains ont besoin de toi!
 Continuer
 Reset
 Accueil
-La Fée électronique est un jeu développé par Sébastien Abilla
-pendant la Game Jam "Wasted Ressources 2" organisée par Bucket-full-games.
-Le code de la Fée électronique est sous licence GPLv3.
+Carte Citoyen du Monde
+Carte Militant local
+La Fée Electronique est un jeu développé par Sébastien Abilla
+pendant la Game Jam "Wasted Ressources 2" organisée par Radiobush and Bucket-full-games en 2022.
+Les proportions d'achat et de recyclage sont librement basées sur:
+Forti V. et al. (2020) Suivi des déchets d'équipements électriques et électroniques à l'échelle mondiale pour 2020
+Mais c'est juste un jeu, hein? En particulieur:
+* le rapport ne mentionne pas de limite quantitative qui nous empêcherait de vivre,
+* il est hasardeux de lier quantité et nocivité: 1 g de mercure est plus toxique qu'1 kg d'aluminium.
+Le code source de la Fée Electronique est sous licence GNU GPLv3.
 Sons et visuels sont modifiés d'originaux sous diverses licences libres,
-et redistribués sous les mêmes licences.
+et ils sont redistribués sous les mêmes licences.
 Tout est disponible sur https://github.com/sebabilla/lafeeelectronique.
-Musiques: The Carnival of the Animals par Seatle Youth Symphony Orchestra.
-Effets sonores modifiés de LaSonothèque de Joseph Sardin.
-Personages modifies de clipart de GDJ.
-Icones du Kawai UI Icon Pack de Poenix Dungeon
-Autres images modifiées de Wikimedia.
+Musiques: The Carnival of the Animals par Seatle Youth Symphony Orchestra.(CC BY-SA 3.0)
+Effets sonores modifiés de LaSonothèque de Joseph Sardin.(CC0 1.0​)​
+Personnages modifiés d'Opencliparts de GDJ.(CC0 1.0​)
+Icon d'appareils du Candy icons set par Eliver Lara.(GNU GPLv3​)
+Image de fond modifiée d'une photo par Toffelginkgo​.(CC BY-SA 3.0​)
 Gnomette a rempli sa mission.
-temps:  
-pas: 
-rangements:   
+temps:
+pas:
+rangements:
 recyclages:
 resets:
+Annuler
+Confirmer
+Un pouvoir mysterieux des pays à fort PIB par habitant.
+Un pouvoir mysterieux des pays à PIB par habitant intermédiaire.
+Bravo, tu as débloqué la carte d'action Citoyen du Monde!
+Bravo, tu as débloqué la carte d'action Militant local!
+  Pendant que tu dormais, ton humain 
+s'est laissé convaincre par une
+association caritative et a décidé
+d'envoyer un tiers de ses vieux
+appareils quelque part en Afrique,
+pour que "là-bas" aussi, ils puissent
+streamer et jouer à des vidéos. 
+  Ton humain se demande un peu si de
+tels services sont accessibles à un
+prix raisonnable "là-bas", mais après
+tout, ce n'est plus son problème.
+  Qu'en penses-tu, Gnomette?
+  Ton humain t'impressionne!
+  Avec un groupe d'activistes locaux
+iels ont alerté leur gouvernement
+sur les problèmes de recyclage. Leur
+representant à l'ONU s'est battu
+pour qu'une motion soit votée et une
+mission va être envoyée sur place!
+  Des premières conclusions sont
+promises pour dans... trois ans.
+  Qu'en penses-tu, Gnomette?

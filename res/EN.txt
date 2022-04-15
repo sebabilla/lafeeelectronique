@@ -1,84 +1,114 @@
-Aissatou au Cameroun
-Melokuhle en Afrique du Sud
-Amelia au Canada
-Mateo au Chili
-Ruòxi en Chine
-Aarav en Inde
-Himari au Japon
-Aleksandar en Bulgarie
-Louise en France
-Oliver en Australie
-La Fée Electronique est toute puissante.
-Presque tous les habitants du monde ont 
-succombé à ses charmes.
-Sous l’emprise de la fée, ils consomment,
-encore et encore.
-Tu es une gnomette au cœur toujours empli d'espoir.
-Ta mission est d’aider dix habitants de
-cette planète à se frayer un chemin au sein
-de leurs vies chaotiques de consommateurs.
-La Fée Electronique va tout faire pour submerger
-ces personnes sous des montagnes d’appareils, 
-gardés “au cas ou”, obsolètes, ou simplement 
-oubliés dans un coin.
-Pour l’en empêcher,
-tu peux aider les humains à
-ranger leur bazar et à 
-utiliser les options de 
-recyclage présentes
-dans leur pays.
-Achète humain, achète!
-Recyclage des e-déchets en
-PAUSE
-La Fée Electronique
-Situation actuelle
-Amélioration de 20 %
-Crédits
-Bravo, tu as débloqué les crédits!
-Bravo, tu as débloqué le mode amélioration de 20 % du recyclage mondiale!
-Bravo, tu as atteint la dixième et dernière année, c'est le dernier combat!
-Bravo Gnomette!
-Tu as réussi à contrarier les plans
-de la Fée Electronique pendant 10 ans
-et à la faire revenir à la raison!
-La Fée n'a pas toujours été aussi cupide.
-Elle s'était laissée corrompre par un mal bien 
-plus puissant, et elle avait oublié sa mission
-première de soutenir les humains.
-Ne relâche pas ton attention, le mal rôde toujours.
-Prépare-toi à affronter le Grand Démon Marketing...
-Traverse le champ des achats de chaque humain de gauche à droite.
-Fais de la place en poussant les appareils avec Flèche + Contrôle Gauche.
-Envoie les appareils électroniques encombrants au recyclage avec Flèche + Espace.
-Facile, non? Ta mission est d'aider les humains pendant 10 années.
-Le potentiel de recyclage du matériel électronique varie selon les pays.
-Tu commences à voir se profiler le problème?
-Tu ne peux pas pousser les tas de matériel rouge ou gris.
-Tu peux envoyer le dessus d'un tas de matériel rouge au recyclage.
-Presse Echap pour faire pause et afficher les options.
-Courage Gnomette! Les humains ont besoin de toi!
-Continuer
+Mateo in Chile
+Amelia in Canada
+Aissatou in Cameroon
+Melokuhle in South Africa
+Louise in France
+Aleksandar in Bulgaria
+Aarav in India
+Meiling in China
+Himari in Japan
+Ed in Australia
+The Electronic Fairy is almighty.
+Almost everyone in the world has 
+fallen under her spell.
+Under the fairy's control, they consume,
+over and over again.
+You are Gnomette and your heart is always full of hope.
+Your mission is to help ten inhabitants of this planet 
+to find their way through 
+their chaotic consumer lives.
+The Electronic Fairy will do whatever it takes
+to drown these people under mountains of devices,
+kept "just in case", obsolete,
+or simply forgotten in a corner.
+To prevent this, 
+you can help the humans 
+to tidy up their mess, 
+and to use the recycling 
+options available
+in their country.
+Buy human, buy!
+E-waste recycling in
+OPTIONS
+The Electronic Fairy
+Business as Usual
+20% improvement
+Credits
+Congratulations, you've unlocked the credits!
+Congratulations, you've unlocked the 20% worldwide recycling improvement mode!
+Congratulations, you've reached the tenth and final year, this is the last battle!
+Well done Gnomette!
+You've managed to thwart the plans
+of the Electronic Fairy for 10 years
+and bring her back to her senses!
+The Fairy wasn't always so greedy.
+She had let herself be corrupted by a
+much more powerful evil, and she forgot
+her original mission to sustain the humans.
+But keep your eyes open, evil still lurks.
+Get ready to face the Great Marketing Demon!
+Cross the purchase field of each human from left to right.
+Send bulky electronics for recycling with ARROW + SPACE.
+Make room by pushing the devices with ARROW + LEFT CONTROL.
+Easy, isn't it? Your mission is to assist humans for 10 years.
+The recycling potential of electronic devices varies from country to country.
+You can't push heaps of red or grey devices.
+You can send the top of a heap of red stuff to recycling.
+Can you see the problem looming?
+Press ESCAPE to display the options and the action cards.
+Be brave Gnomette! The humans need you!
+Continue
 Reset
-Accueil
-La Fée électronique est un jeu développé par Sébastien Abilla
-pendant la Game Jam "Wasted Ressources 2" organisée par Bucket-full-games.
-Les proportions d'achat et de recyclage sont librement basées sur:
-Forti V. et al. (2020) Suivi des déchets d'équipements électriques et électroniques à l'échelle mondiale pour 2020
-Mais c'est juste un jeu, en particulieur:
-* le rapport ne mentionne pas de limite quantitative qui nous empêcherait de vivre,
-* il est hasardeux de lier quantité et nocivité: 1 g de mercure est plus toxique qu'1 kg d'aluminium.
-Le code de la Fée électronique est sous licence GPLv3.
-Sons et visuels sont modifiés d'originaux sous diverses licences libres,
-et redistribués sous les mêmes licences.
-Tout est disponible sur https://github.com/sebabilla/lafeeelectronique.
-Musiques: The Carnival of the Animals par Seatle Youth Symphony Orchestra.
-Effets sonores modifiés de LaSonothèque de Joseph Sardin.
-Personages modifies de clipart de GDJ.
-Icones du Kawai UI Icon Pack de Poenix Dungeon
-Autres images modifiées de Wikimedia.
-Gnomette a rempli sa mission.
-temps: 
-pas: 
-rangements: 
-recyclages: 
-resets: 
+Home screen
+World Citizen Card
+Local Activist Card
+La Fée Electronique (The Electronic Fairy) is a game developed by Sébastien Abilla
+during the Game Jam "Wasted Ressources 2" organised by Radiobush and Bucket-full-games in 2022.
+The purchase and recycling rates are loosely based on:
+Forti V. et al. (2020) The Global E-waste Monitor 2020: Quantities, flows and the circular economy potential.
+But it's just a game, right? Notably:
+* the report doesn't mention a quantitative limit that would prevent us from living,
+* it's dubious to link quantity and harmfulness: 1g of mercury is more toxic than 1kg of aluminium.
+The source code of La Fée Electronique is licensed under GNU GPLv3.
+Sounds and visuals are modified from originals under various free licenses,
+and they are redistributed under compatible licences.
+Everything is available at https://github.com/sebabilla/lafeeelectronique.
+Music: The Carnival of the Animals by Seattle Youth Symphony Orchestra.(CC BY-SA 3.0)
+Sound effects: modified from LaSonothèque by Joseph Sardin.(CC0 1.0​)​
+Characters: modified  from Opencliparts by GDJ.(CC0 1.0​)
+Device icons from the Candy icons set by Eliver Lara.(GNU GPLv3​)
+​Background image modified from a picture by Toffelginkgo​.(CC BY-SA 3.0​)
+Gnomette completed her mission.
+time:
+steps:
+tidying up:
+recycling:
+resets:
+Cancel
+Confirm
+A mysterious power for people from a high GDP per capita country.
+A mysterious power for people from an intermediate GDP per capita country.
+Congratulations, you've unlocked the action card World Citizen!
+Congratulations, you've unlocked the action card Local Activist Card!
+  While you were sleeping, your
+human got talked into it by a
+charity and decided to send a
+third of their old appliances
+somewhere in Africa, so that
+"over there" they can also stream
+and play video games.
+  Somewhat, your human wonders 
+if such services are affordable
+"over there", but then again, it's
+a problem for those of "over there".
+  What do you think, Gnomette?
+  Your human amazes you!
+  Together with a group of local 
+activists, they alerted their
+government about recyling issues.
+Their representative at the UN
+fought for a motion to be passed
+and observators will come soon!
+  First conclusions can be expected
+in three years' time.
+  What do you think, Gnomette?
