@@ -48,7 +48,7 @@ her original mission to sustain the humans.
 But keep your eyes open, evil still lurks.
 Get ready to face the Great Marketing Demon!
 Cross the purchase field of each human from left to right.
-ARROW + SPACE: send for recycling; ARROW + LEFT CTRL: push the devices (or left ⌘)
+ARROW + SPACE: send for recycling; ARROW + LEFT SHIFT: push the devices
 The recycling potential of electronic devices (%) varies from country to country.
 Your ammunition is recalculated every year according to the national recycling %.
 Your mission is to assist humans for 10 years without being blocked by a heap of devices.

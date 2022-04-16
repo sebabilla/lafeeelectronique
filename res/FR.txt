@@ -48,7 +48,7 @@ première de soutenir les humains.
 Mais ne relâche pas ton attention, le mal rôde toujours.
 Prépare-toi à affronter le Grand Démon Marketing!
 Traverse le champ des achats de chaque humain de gauche à droite.
-FLECHE + ESPACE: Envoie au recyclage; FLECHE + CTRL GAUCHE: Pousse les encombrants (ou ⌘ gauche)
+FLECHE + ESPACE: Envoie au recyclage; FLECHE + MAJ GAUCHE: Pousse les encombrants
 Le potentiel de recyclage du matériel électronique (%) varie selon les pays.
 Tes munitions sont recalculées tous les ans en fonction des % nationaux de recyclage.
 Ta mission est d'aider les humains pendant 10 années sans être bloquée par des tas d'achat.
