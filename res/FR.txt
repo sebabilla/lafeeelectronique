@@ -63,7 +63,7 @@ Accueil
 Carte Citoyen du Monde
 Carte Militant local
 La Fée Electronique est un jeu développé par Sébastien Abilla
-pendant la Game Jam "Wasted Ressources 2" organisée par Radiobush and Bucket-full-games en 2022.
+pendant la Game Jam "Wasted Resources 2" organisée par Radiobush and Bucket-full-games en 2022.
 Les proportions d'achat et de recyclage sont librement basées sur:
 Forti V. et al. (2020) Suivi des déchets d'équipements électriques et électroniques à l'échelle mondiale pour 2020
 Mais c'est juste un jeu, hein? En particulieur:

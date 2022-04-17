@@ -63,7 +63,7 @@ Home screen
 World Citizen Card
 Local Activist Card
 La Fée Electronique (The Electronic Fairy) is a game developed by Sébastien Abilla
-during the Game Jam "Wasted Ressources 2" organised by Radiobush and Bucket-full-games in 2022.
+during the Game Jam "Wasted Resources 2" hosted by Radiobush and Bucket-full-games in 2022.
 The purchase and recycling rates are loosely based on:
 Forti V. et al. (2020) The Global E-waste Monitor 2020: Quantities, flows and the circular economy potential.
 But it's just a game, right? Notably:

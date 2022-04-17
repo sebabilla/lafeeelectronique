@@ -63,7 +63,7 @@ ESCAPE：オプションに入り、本年がリセットできます。
 世界人カード
 地域活動家カード
 La Fée Electronique（電子の精）は、Sébastien Abillaが作ったゲームです。
-2022年にRadiobush様とBucket-full-games様が行ったWasted Ressources 2というゲームジャムの貢献でした。
+2022年にRadiobush様とBucket-full-games様が行ったWasted Resources 2というゲームジャムの貢献でした。
 購買率とリサイクル率は、このレポートにゆるやかに基づいています：
 Forti V. et al. (2020) 「The Global E-waste Monitor 2020: Quantities, flows and the circular economy potential.」
 でも、ただのゲームですよね？且つ、次の点を注目させたいです。
